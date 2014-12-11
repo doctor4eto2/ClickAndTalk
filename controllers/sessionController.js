@@ -1,5 +1,5 @@
 ﻿(function (sessionController) {
-    var urlModule = require('Url');
+    var urlModule = require('url');
 
     sessionController.init = function (app, io) {
         app.get('/session/create', sessionController.create);
