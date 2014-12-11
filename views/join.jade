@@ -1,0 +1,33 @@
+﻿extends layout
+
+block content
+    .jumbotron
+        .row
+            .col-md-8
+            .row
+                .userInfo
+                    label Your session Id is : #{sessionId}
+                    br
+                    label Your user name is : #{userName}
+                    br
+                    label Number of connected users: 
+                    input#txtNumberOfUsers(type="text" value="", disabled ="true")
+                    br
+                    label Join Url : 
+                    input#txtJoinJoinUrl(type="text" value="", disabled ="true")
+                    input#hdnJoinSessionId(type="hidden" name="target" value="#{sessionId}")
+                    input#hdnJoinUserName(type='hidden' name='target' value='#{userName}')
+                .clear
+                video.remote#remoteVideo(autoplay="" width="100%" style="display: none;")
+            .col-md-4
+            .row
+                img.img-responsive#no-other-participiants(src="../images/no-other-participiants.png")
+                video.remote#localVideo(autoplay="" muted="" width="100%" style="display: none")
+            .row
+                .txtarea#txtJoinChat
+                input#txtJoinMessage(type="text" placeholder="Type a message here...")
+                button#btnJoinEnterMessage Enter
+
+
+block scripts
+    script(src='/javascripts/join.js')

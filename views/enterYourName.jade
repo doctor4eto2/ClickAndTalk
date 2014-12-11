@@ -1,0 +1,11 @@
+﻿extends layout
+
+block content
+    .divEnterYourName
+        label Please enter your name :
+        input#txtEnterYourName(type="text")
+        button#btnEnterYourName Enter
+        input#hdnEnterYourNamePrevousRequestUrl(type="hidden" value="#{url}")
+        
+block scripts
+    script(src='/javascripts/enterYourName.js')
