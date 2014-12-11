@@ -6,7 +6,6 @@
   "engine" : {
 	 "node": "0.10.x"
   },
-  "start": "node controllers\index.js",
   "author": {
     "name": "Doctora",
     "email": ""
