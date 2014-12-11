@@ -32,7 +32,7 @@ if ('development' == app.get('env')) {
 
 // Map the routes
 
-controllers.init(app);
+//controllers.init(app);
 console.log('controllers were loaded');
 var server = http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
