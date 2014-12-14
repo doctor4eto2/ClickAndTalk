@@ -18,15 +18,16 @@ block content
                     input#hdnJoinSessionId(type="hidden" name="target" value="#{sessionId}")
                     input#hdnJoinUserName(type='hidden' name='target' value='#{userName}')
                 .clear
-                video.remote#remoteVideo(autoplay="" width="100%" style="display: none;")
             .col-md-4
             .row
-                img.img-responsive#no-other-participiants(src="../images/no-other-participiants.png")
-                video.remote#localVideo(autoplay="" muted="" width="100%" style="display: none")
+            .videos
+                video#myVideo(width='320', height='240', autoplay)
+                label#lblMyVideo Your Video Camera
+            .clear
             .row
                 .txtarea#txtJoinChat
                 input#txtJoinMessage(type="text" placeholder="Type a message here...")
-                button#btnJoinEnterMessage Enter
+                button#btnEnterMessage Enter
 
 
 block scripts

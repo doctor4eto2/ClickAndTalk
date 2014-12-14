@@ -3,9 +3,6 @@
   "version": "0.0.0",
   "description": "ClickAndTalk",
   "main": "app.js",
-  "engine" : {
-	 "node": "0.10.x"
-  },
   "author": {
     "name": "Doctora",
     "email": ""

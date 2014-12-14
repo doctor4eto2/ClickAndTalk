@@ -8,8 +8,6 @@ var controllers = require('./controllers');
 var http = require('http');
 var path = require('path');
 
-console.log('modules were loaded');
-
 var app = express();
 
 // all environments
@@ -33,11 +31,10 @@ if ('development' == app.get('env')) {
 // Map the routes
 
 controllers.init(app);
-console.log('controllers were loaded');
+
 var server = http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 
 var chatServerManagerModule = require('./chatServerManager');
 chatServerManagerModule.init(server);
-console.log('chat module was loaded');

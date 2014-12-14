@@ -42,8 +42,11 @@
     <Compile Include="controllers\sessionController.js" />
     <Compile Include="public\javascripts\enterYourName.js" />
     <Compile Include="public\javascripts\home.js" />
+    <Compile Include="public\javascripts\homeModule.js" />
     <Compile Include="public\javascripts\join.js" />
-    <Compile Include="public\javascripts\session.js" />
+    <Compile Include="public\javascripts\sessionModule.js" />
+    <Compile Include="public\javascripts\videoModule.js" />
+    <Compile Include="public\javascripts\wrongSessionId.js" />
     <Compile Include="repositories\databaseTestRepository.js" />
     <Compile Include="repositories\index.js" />
   </ItemGroup>

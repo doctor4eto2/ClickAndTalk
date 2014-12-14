@@ -6,9 +6,8 @@
     
     chatServerManager.init = function (server) {
         var io = socketIOModule.listen(server);
-
+        
         io.sockets.on('connection', function (socket) {
-            
             socket.on('chat', function (data) {
                 
                 var d = new Date();
