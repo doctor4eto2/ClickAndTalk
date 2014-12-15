@@ -16,5 +16,5 @@
     clickAndTalk.sessionModule.initializeEnterMessageButton('#btnEnterMessage', '#txtJoinMessage', '#hdnJoinUserName', '#hdnJoinSessionId', 'Please enter a message!');
     clickAndTalk.sessionModule.initializeMessageOnKeyPress('#txtJoinMessage', '#hdnJoinUserName', '#hdnJoinSessionId', 'Please enter a message!');
     
-    clickAndTalk.videoModule.showMyVideoCamera('#myVideo');
+    clickAndTalk.videoModule.init('#btnStartVideo', '#btnStopVideo', '#myVideo');
 })();
