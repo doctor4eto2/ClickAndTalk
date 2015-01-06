@@ -94,10 +94,19 @@ width : 50%;
     float : left;
     clear : both;
 }
+#lblRemoteVideo {
+    display : block;
+    float : left;
+     margin-left : 150px;
+}
 #myVideo {
     margin-top : 20px;
     float : left;
-    clear : both;
+}
+#remoteVideo {
+    margin-top : 20px;
+    margin-left : 20px;
+    float : left;
 }
 .clear
 {

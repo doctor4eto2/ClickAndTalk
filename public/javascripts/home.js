@@ -1,4 +1,10 @@
-﻿(function () {
-    clickAndTalk.homeModule.initializeCreateSessionButton('#btnHomeCreateSession', '#txtHomeUserName', '/session/create?', 'User name is required!');
-    clickAndTalk.homeModule.initializeJoinSessionButton('#btnHomeJoinSession', '#txtHomeUserName', '#txtHomeJoinSessionId', '/session/join?sessionId=', 'User name is required!', 'Session id is required!');
-})();
+﻿$(document).ready(function () {
+    clickAndTalk.homeModule.init('#btnHomeCreateSession', 
+                                 '#btnHomeJoinSession', 
+                                 '#txtHomeJoinSessionId',
+                                 '#txtHomeUserName', 
+                                 '/session/join?sessionId=', 
+                                 '/session/create?', 
+                                 'User name is required!', 
+                                 'Session id is required!');      
+});

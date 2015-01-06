@@ -1,11 +1,18 @@
 ﻿var clickAndTalk = clickAndTalk || {};
 clickAndTalk.sessionModule = (function () {
     
+    var sessionIdSelector = '#hdnJoinSessionId';
     var socket = io.connect();
     
     return {
         joinSession : function (joinSessionIdSelector){
             socket.emit('join session', $(joinSessionIdSelector).val());
+        },
+        sendMessage : function (message) {
+            socket.emit('video related message', { sessionId : $(sessionIdSelector).val(), message : message });
+        },
+        onVideoRelatedMessage : function (onMessageEventHandler) {
+            socket.on('video related message', onMessageEventHandler);
         },
         onChat : function (onChatEventHandler)
         {
@@ -14,6 +21,9 @@ clickAndTalk.sessionModule = (function () {
         onJoinedAnotherUser : function (onJoinedAnotherUserEventHandler)
         {
             socket.on('joined another user', onJoinedAnotherUserEventHandler);
+        },
+        onJoinedSuccessfully : function (onJoinedSuccessfully) {
+            socket.on('joined successfully', onJoinedSuccessfully);
         },
         initializeEnterMessageButton : function (btnEnterMessageSelector, messageSelector, userNameSelector, sessionIdSelector, pleaseEnterMessageText){
             $(btnEnterMessageSelector).click(function () {

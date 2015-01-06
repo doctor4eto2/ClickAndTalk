@@ -42,10 +42,12 @@
     <Compile Include="controllers\sessionController.js" />
     <Compile Include="public\javascripts\enterYourName.js" />
     <Compile Include="public\javascripts\home.js" />
+    <Compile Include="public\javascripts\modules\audioCodecModule.js" />
     <Compile Include="public\javascripts\modules\homeModule.js" />
     <Compile Include="public\javascripts\join.js" />
     <Compile Include="public\javascripts\modules\sessionModule.js" />
     <Compile Include="public\javascripts\modules\videoModule.js" />
+    <Compile Include="public\javascripts\modules\webRTCPeerConnectionModule.js" />
     <Compile Include="public\javascripts\wrongSessionId.js" />
     <Compile Include="repositories\databaseTestRepository.js" />
     <Compile Include="repositories\index.js" />

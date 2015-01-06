@@ -43,6 +43,10 @@
                 socket.client.sockets[0].emit('chat', dataToSend);//push back to the sender
             });
             
+            socket.on('video related message', function (data) {
+                socket.broadcast.to(data.sessionId).emit('video related message', data.message);
+            });
+
             socket.on('join session', function (sessionId) {
                 socket.join(sessionId);
                 
@@ -58,7 +62,7 @@
                 }
 
                 socket.broadcast.to(sessionId).emit('joined another user', numberOfUsers);
-                socket.client.sockets[0].emit('joined another user', numberOfUsers);
+                socket.client.sockets[0].emit('joined successfully', numberOfUsers);
             });
         });
 
