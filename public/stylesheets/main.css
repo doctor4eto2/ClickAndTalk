@@ -57,10 +57,12 @@ width : 50%;
 width : 50%;
 }
 #btnEnterMessage {
+    float : left;
     margin-left : 10px;
 }
 #txtJoinMessage {
     width : 400px;
+    float : left;
 }
 #txtJoinChat {
     height : 300px;
@@ -90,6 +92,7 @@ width : 50%;
     width : 30px;
 }
 #lblMyVideo {
+    margin-left : 60px;
     display : block;
     float : left;
     clear : both;
@@ -97,7 +100,7 @@ width : 50%;
 #lblRemoteVideo {
     display : block;
     float : left;
-     margin-left : 150px;
+     margin-left : 160px;
 }
 #myVideo {
     margin-top : 20px;

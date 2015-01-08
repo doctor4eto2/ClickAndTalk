@@ -26,26 +26,20 @@ clickAndTalk.videoModule = (function () {
             return false;
         }
         else {
+            var settings = {
+                video: true, 
+                audio: true, 
+                toString: function () { return 'video, audio'; }
+            };
+
             if (navigator.webkitGetUserMedia) {
-                navigator.webkitGetUserMedia({
-                    video: true, 
-                    audio: true, 
-                    toString: function () { return 'video, audio'; }
-                }, onStream, onError);
+                navigator.webkitGetUserMedia(settings, onStream, onError);
             }
             else if (navigator.getUserMedia) {
-                navigator.getUserMedia({
-                    video: true, 
-                    audio: true, 
-                    toString: function () { return 'video, audio'; }
-                }, onStream, onError);
+                navigator.getUserMedia(settings, onStream, onError);
             }
             else if (navigator.mozGetUserMedia) {
-                navigator.mozGetUserMedia({
-                    video: true, 
-                    audio: true, 
-                    toString: function () { return 'video, audio'; }
-                }, onStream, onError);
+                navigator.mozGetUserMedia(settings, onStream, onError);
             }
         }
         
@@ -65,9 +59,9 @@ clickAndTalk.videoModule = (function () {
             
             if (isInitiator) {
                 clickAndTalk.webRTCPeerConnectionModule.init(clickAndTalk.videoModule.getRemoteVideoSelector(), 
-                                                                 clickAndTalk.videoModule.getLocalStream(),
-                                                                 clickAndTalk.videoModule.isInitiator(),
-                                                                 clickAndTalk.videoModule.getChannelReady());
+                                                             clickAndTalk.videoModule.getLocalStream(),
+                                                             clickAndTalk.videoModule.isInitiator(),
+                                                             clickAndTalk.videoModule.getChannelReady());
             }
             
             disableButton(btnStartVideoSelector, false);
@@ -97,9 +91,11 @@ clickAndTalk.videoModule = (function () {
                 startVideo();
             });
             $(btnStopVideoSelector).click(function () {
-                var myVideo = $(myVideoSelector).attr('src', '');;
+                $(myVideoSelector).attr('src', '');
+                $(remoteVideoSelector).attr('src', '');
                 disableButton(btnStartVideoSelector, true);
                 disableButton(btnStopVideoSelector, false);
+                clickAndTalk.webRTCPeerConnectionModule.setIsStarted(false);
             });
             startVideo();
         },
@@ -115,8 +111,8 @@ clickAndTalk.videoModule = (function () {
         getRemoteVideoSelector : function () {
             return remoteVideoSelector;
         },
-        setInitiator : function () {
-            isInitiator = true;
+        setIsInitiator : function (flag) {
+            isInitiator = flag;
         },
         isInitiator : function (){
             return isInitiator;

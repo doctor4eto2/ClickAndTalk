@@ -42,7 +42,7 @@ clickAndTalk.sessionModule = (function () {
                     var textMessage = $(this).val();
                     
                     if (textMessage) {
-                        appendChatMessage(textMessage, userNameSel, sessionIdSelector, txtEnterMessageSelector);
+                        appendChatMessage(textMessage, userNameSel, sessionIdSelector, textMessageSel);
                     }
                     else {
                         alert(pleaseEnterMessageText);
@@ -97,7 +97,7 @@ clickAndTalk.sessionModule = (function () {
                                                     $(noOtherParticipiantsSel).hide();
                                                 }
                                                 else {
-                                                    clickAndTalk.videoModule.setInitiator();
+                                                    clickAndTalk.videoModule.setIsInitiator(true);
                                                     $(noOtherParticipiantsSel).show();
                                                 }
                                                 $(numberOfUsersSel).val(numberOfUsers);
@@ -123,6 +123,19 @@ clickAndTalk.sessionModule = (function () {
                 }
                 else {
                     window.location = $(prevousRequestedUrlSelector).val() + '&&userName=' + name;
+                }
+            });
+            $(txtEnterYourNameSelector).keypress(function (e) {
+                if (e.which == 13) // enter button
+                {
+                    var name = $(this).val();
+                    
+                    if (name) {
+                        window.location = $(prevousRequestedUrlSelector).val() + '&&userName=' + name;
+                    }
+                    else {
+                        alert(pleaseEnterYourNameMessage);
+                    }
                 }
             });
         }

@@ -11,18 +11,18 @@ block content
                     label Your user name is : #{userName}
                     br
                     label Number of connected users: 
-                    input#txtNumberOfUsers(type="text" value="", disabled ="true")
+                    input.btn-default#txtNumberOfUsers(type="text" value="", disabled ="true")
                     br
                     label Join Url : 
-                    input#txtJoinJoinUrl(type="text" value="", disabled ="true")
-                    input#hdnJoinSessionId(type="hidden" name="target" value="#{sessionId}")
-                    input#hdnJoinUserName(type='hidden' name='target' value='#{userName}')
+                    input.btn-default#txtJoinJoinUrl(type="text" value="", disabled ="true")
+                    input.btn-default#hdnJoinSessionId(type="hidden" name="target" value="#{sessionId}")
+                    input.btn-default#hdnJoinUserName(type='hidden' name='target' value='#{userName}')
                 .clear
             .col-md-4
             .row
             .videos
-                video#myVideo(width='320', height='240', autoplay)
-                video#remoteVideo(width='320', height='240', autoplay)
+                video.embed-responsive-item#myVideo(width='320', height='240', autoplay)
+                video.embed-responsive-item#remoteVideo(width='320', height='240', autoplay)
                 label#lblMyVideo Your Video Camera
                 label#lblRemoteVideo Remote Camera
 
@@ -31,7 +31,7 @@ block content
                 button#btnStartVideo(class="btn btn-default control-camera-buttons") Start Video
                 button#btnStopVideo(class="btn btn-default control-camera-buttons") Stop Video
                 .txtarea#txtJoinChat
-                input#txtJoinMessage(type="text" placeholder="Type a message here...")
+                input#txtJoinMessage(type="text" class="form-control" placeholder="Type a message here...")
                 button#btnEnterMessage(class="btn btn-default") Enter
 
 

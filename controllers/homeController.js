@@ -11,7 +11,7 @@
     };
     
     homeController.about = function (req, res) {
-        res.render('about', { title: 'Click And Talk', year: new Date().getFullYear(), message: '"Click and Talk" is application which allows free online video chat.' });
+        res.render('about', { title: 'Click And Talk', year: new Date().getFullYear(), message: 'This is an application which allows free online video chat via webRTC and web sockets.' });
     };
     
     homeController.contact = function (req, res) {

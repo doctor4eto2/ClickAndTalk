@@ -14,6 +14,13 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
             'OfferToReceiveVideo': true
         }
     };
+    var configuration = {
+        iceServers: [
+                    { url: "stun:23.21.150.121" },
+                    { url: "stun:stun.l.google.com:19302" },
+                    { url: "turn:numb.viagenie.ca", credential: "webrtcdemo", username: "louis%40mozilla.com" }
+                ]
+    };
 
     //private methods
     var handleIceCandidate = function (event) {
@@ -51,15 +58,13 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
         clickAndTalk.sessionModule.sendVideoRelatedMessage(sessionDescription);
     };
     var handlerAnswerError = function (event) {
-        console.log('handle answer error'); 
-    }
+        console.log('handle answer error');
+    };
     var createPeerConnection = function () {
         try {
-            var servers = null;
-            
             if (window.webkitRTCPeerConnection) {
                 isChromeOrOpera = true;
-                pc = new webkitRTCPeerConnection(servers, {
+                pc = new webkitRTCPeerConnection(configuration, {
                     optional: [{
                         RtpDataChannels: true
                     }]
@@ -67,7 +72,7 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
             }
             else if (window.mozRTCPeerConnection) {
                 isFirefox = true;
-                pc = new mozRTCPeerConnection(servers, {
+                pc = new mozRTCPeerConnection(configuration, {
                     optional: [{
                         RtpDataChannels: true
                     }]
@@ -110,6 +115,9 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
         },
         isStarted : function () { 
             return isStarted;
+        },
+        setIsStarted : function (flag){
+            isStarted = flag;
         },
         addIceCandidate : function (message) { 
             var candidate;
