@@ -1,6 +1,7 @@
 ﻿var clickAndTalk = clickAndTalk || {};
 clickAndTalk.homeModule = (function () {
     return {
+        //public methods
         init : function (btnCreateSessionSelector, 
                          btnJoinSessionSelector, 
                          joinSessionIdSelector,
@@ -10,14 +11,14 @@ clickAndTalk.homeModule = (function () {
                          userNameRequiredMessage, 
                          sessionIdRequiredMessage) {
             $(btnCreateSessionSelector).click(function () {
-            var userName = $(userNameSelector).val();
+                var userName = $(userNameSelector).val();
 
-            if (userName != '') {
-                window.location = createSessionRedirectUrl + 'userName=' + userName;
-            }
-            else {
-                alert(userNameRequiredMessage);
-            }
+                if (userName != '') {
+                    window.location = createSessionRedirectUrl + 'userName=' + userName;
+                }
+                else {
+                    alert(userNameRequiredMessage);
+                }
             });
 
             $(btnJoinSessionSelector).click(function () {

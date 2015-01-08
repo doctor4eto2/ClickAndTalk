@@ -1,0 +1,20 @@
+{
+  "name": "ClickAndTalk",
+  "version": "0.0.0",
+  "description": "ClickAndTalk",
+  "main": "app.js",
+  "author": {
+    "name": "Doctora",
+    "email": ""
+  },
+  "dependencies": {
+    "express": "^3.4.4",
+    "jade": "^1.8.1",
+    "mongodb": "^1.4.22",
+    "querystring": "^0.2.0",
+    "socket.io": "^1.2.1",
+    "stylus": "^0.49.3",
+    "underscore": "^1.7.0",
+    "url": "^0.10.1"
+  }
+}

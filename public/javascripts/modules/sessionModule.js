@@ -1,66 +1,113 @@
 ﻿var clickAndTalk = clickAndTalk || {};
 clickAndTalk.sessionModule = (function () {
     
-    var sessionIdSelector = '#hdnJoinSessionId';
+    //private fields
+    var sessionIdSelector;
+    var joinUrlSelector;
+    var txtJoinChatSelector;
+    var joinUrlSelector;
     var socket = io.connect();
     
+    //private methods
+    var appendChatMessage = function (message, hdnUserName, hdnSessionIdName, txtMessageName) {
+        var userName = $(hdnUserName).val();
+        
+        socket.emit('chat', { message : message, sessionId : $(hdnSessionIdName).val(), userName : userName });
+        $(txtMessageName).val('');
+    };
+    
     return {
-        joinSession : function (joinSessionIdSelector){
-            socket.emit('join session', $(joinSessionIdSelector).val());
-        },
-        sendMessage : function (message) {
-            socket.emit('video related message', { sessionId : $(sessionIdSelector).val(), message : message });
-        },
-        onVideoRelatedMessage : function (onMessageEventHandler) {
-            socket.on('video related message', onMessageEventHandler);
-        },
-        onChat : function (onChatEventHandler)
-        {
-            socket.on('chat', onChatEventHandler);
-        },
-        onJoinedAnotherUser : function (onJoinedAnotherUserEventHandler)
-        {
-            socket.on('joined another user', onJoinedAnotherUserEventHandler);
-        },
-        onJoinedSuccessfully : function (onJoinedSuccessfully) {
-            socket.on('joined successfully', onJoinedSuccessfully);
-        },
-        initializeEnterMessageButton : function (btnEnterMessageSelector, messageSelector, userNameSelector, sessionIdSelector, pleaseEnterMessageText){
-            $(btnEnterMessageSelector).click(function () {
-                var textMessage = $(messageSelector).val();
+        //public methods
+        init : function (joinUrlSel, sessionIdSel, joinChatSel, joinUrlSel, btnEnterMessageSel, textMessageSel, userNameSel, pleaseEnterMessageText, noOtherParticipiantsSel, numberOfUsersSel) {
+            sessionIdSelector = sessionIdSel;
+            joinUrlSelector = joinUrlSel;
+            joinChatSelector = joinChatSel;
+            joinUrlSelector = joinUrlSel;
+            
+            //setting some event handlers
+            $(btnEnterMessageSel).click(function () {
+                var textMessage = $(textMessageSel).val();
                 
                 if (textMessage) {
-                    clickAndTalk.sessionModule.appendChatMessage(textMessage, userNameSelector, sessionIdSelector, messageSelector);
+                    appendChatMessage(textMessage, userNameSel, sessionIdSelector, textMessageSel);
                 }
                 else {
                     alert(pleaseEnterMessageText);
                 }
             });
-        },
-        initializeMessageOnKeyPress : function (txtEnterMessageSelector, userNameSelector, sessionIdSelector, pleaseEnterMessageText)
-        {
-            $(txtEnterMessageSelector).keypress(function (e) {
+            
+            $(textMessageSel).keypress(function (e) {
                 if (e.which == 13) // enter button
                 {
                     var textMessage = $(this).val();
                     
                     if (textMessage) {
-                        clickAndTalk.sessionModule.appendChatMessage(textMessage, userNameSelector, sessionIdSelector, txtEnterMessageSelector);
+                        appendChatMessage(textMessage, userNameSel, sessionIdSelector, txtEnterMessageSelector);
                     }
                     else {
                         alert(pleaseEnterMessageText);
                     }
                 }
             });
-        },
-        appendChatMessage : function (message, hdnUserName, hdnSessionIdName, txtMessageName) {
-            var userName = $(hdnUserName).val();
+            
+            //setting socket related handlers and join specific session
+            socket.emit('join session', $(sessionIdSelector).val());
+            socket.on('video related message', function (message) {
+                var isInitiator = clickAndTalk.videoModule.isInitiator();
+                
+                if (message === 'user media allowed') {
+                    clickAndTalk.webRTCPeerConnectionModule.init(clickAndTalk.videoModule.getRemoteVideoSelector(), 
+                                                                 clickAndTalk.videoModule.getLocalStream(),
+                                                                 isInitiator,
+                                                                 clickAndTalk.videoModule.getChannelReady());
+                }
+                else if (message.type === 'offer') {
+                    if (!isInitiator && !clickAndTalk.webRTCPeerConnectionModule.isStarted()) {
+                        clickAndTalk.webRTCPeerConnectionModule.init(clickAndTalk.videoModule.getRemoteVideoSelector(), 
+                                                                     clickAndTalk.videoModule.getLocalStream(),
+                                                                     isInitiator,
+                                                                     clickAndTalk.videoModule.getChannelReady());
+                    }
+                    
+                    clickAndTalk.webRTCPeerConnectionModule.setRemoteDescription(message);
+                    clickAndTalk.webRTCPeerConnectionModule.createAnswer();
+                } 
+                else if (message.type === 'answer' && clickAndTalk.webRTCPeerConnectionModule.isStarted()) {
+                    clickAndTalk.webRTCPeerConnectionModule.setRemoteDescription(message);
+                } 
+                else if (message.type === 'candidate' && clickAndTalk.webRTCPeerConnectionModule.isStarted()) {
+                    clickAndTalk.webRTCPeerConnectionModule.addIceCandidate(message);
+                }
+            });
+            socket.on('chat', function (data) { $(joinChatSelector).append('<p style="color:' + data.color + '"><b>' + data.message + '<b/><p/>') });
+            socket.on('joined another user', function (numberOfUsers) {
+                                                if (numberOfUsers > 1) {
+                                                    clickAndTalk.videoModule.setChannelCreated();
+                    
+                                                    $(noOtherParticipiantsSel).hide();
+                                                }
+                                                else {
+                                                    $(noOtherParticipiantsSel).show();
+                                                }
+                                                $(numberOfUsersSel).val(numberOfUsers);
+                                            });
+            socket.on('joined successfully', function (numberOfUsers) {
+                                                if (numberOfUsers > 1) {
+                                                    clickAndTalk.videoModule.setChannelCreated();
+                                                    $(noOtherParticipiantsSel).hide();
+                                                }
+                                                else {
+                                                    clickAndTalk.videoModule.setInitiator();
+                                                    $(noOtherParticipiantsSel).show();
+                                                }
+                                                $(numberOfUsersSel).val(numberOfUsers);
+            });
 
-            socket.emit('chat', { message : message, sessionId : $(hdnSessionIdName).val(), userName : userName });
-            $(txtMessageName).val('');
-        },
-        setJoinUrl : function (joinUrlSelector, sessionIdSelector){
             $(joinUrlSelector).val(window.location.origin + '/session/join' + '?sessionId=' + $(sessionIdSelector).val());
+
+        },
+        sendVideoRelatedMessage : function (message) {
+            socket.emit('video related message', { sessionId : $(sessionIdSelector).val(), message : message });
         },
         initializeWrongSessionIdBackButton : function (btnBackSelector, redirectUrl) {
             $(btnBackSelector).click(function () {

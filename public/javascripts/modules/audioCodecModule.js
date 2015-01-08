@@ -1,6 +1,7 @@
 ﻿var clickAndTalk = clickAndTalk || {};
 clickAndTalk.audioCodecModule = (function () {
     
+    //private methods
     var extractSdp = function (sdpLine, pattern) {
         var result = sdpLine.match(pattern);
         return result && result.length === 2 ? result[1] : null;
@@ -45,6 +46,7 @@ clickAndTalk.audioCodecModule = (function () {
     };
 
     return {
+        //public methods
         // Set Opus as the default audio codec if it's present.
         preferOpus : function (sdp){
             var sdpLines = sdp.split('\r\n');

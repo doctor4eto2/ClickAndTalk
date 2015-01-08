@@ -1,0 +1,19 @@
+﻿extends layout
+
+block content
+    .jumbotron
+        .row
+            .col-md-8
+            .row
+                img.img-responsive#joinRoom(src="../images/join-room.png")
+                video.remote#remoteVideo(autoplay="" width="100%" style="display: none;")
+            .col-md-4
+            .row
+                img.img-responsive#no-other-participiants(src="../images/no-other-participiants.png")
+                video.remote#localVideo(autoplay="" muted="" width="100%" style="display: none")
+            .row
+                .txtarea#chat
+                input.fullsz#msg(type="text" placeholder="Press enter to send message")
+
+
+        

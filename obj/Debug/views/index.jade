@@ -1,0 +1,20 @@
+﻿extends layout
+
+block content
+  .jumbotron.homeMainArea
+    h1(id="homeMainTitle") Click And Talk
+    ul.breadcrumb.ulHomeCreateJoinSession
+        li.liHomeCreateSession
+            button#btnHomeCreateSession(class="btn btn-default", type="submit") Create Session
+        li.liHomeJoinSession
+            button#btnHomeJoinSession(class="btn btn-default", type="submit") Join Session
+            input#txtHomeJoinSessionId(type="text" class="form-control" placeholder="Session Id")
+    div.divHomeMainImage
+        img(id="homeMainImage" src="/images/video-conference-rental.jpg")
+
+
+
+
+block scripts
+    script(src='/javascripts/home.js')
+
