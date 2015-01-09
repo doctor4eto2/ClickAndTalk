@@ -48,9 +48,11 @@ clickAndTalk.webRTCPeerConnectionModule =(function () {
                 console.log('Remote stream added.');
                 if (typeof (webkitURL) != 'undefined') {
                     $(remoteVideoSelector).attr('src', webkitURL.createObjectURL(event.stream));
+                    $(remoteVideoSelector).show();
                 }
                 else if (typeof (window.URL) != 'undefined') {
                     $(remoteVideoSelector).attr('src', window.URL.createObjectURL(event.stream));
+                    $(remoteVideoSelector).show();
                 }
                 remoteVideoStream = event.stream;
             };

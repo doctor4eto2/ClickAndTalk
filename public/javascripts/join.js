@@ -9,6 +9,13 @@
                                     'Please enter a message!', 
                                     '#no-other-participiants', 
                                     '#txtNumberOfUsers');
-    clickAndTalk.videoModule.init('#btnStartVideo', '#btnStopVideo', '#myVideo', '#txtNumberOfUsers', '#remoteVideo');
+    clickAndTalk.videoModule.init('#btnStartVideo', 
+                                  '#btnStopVideo', 
+                                  '#myVideo', 
+                                  '#txtNumberOfUsers', 
+                                  '#remoteVideo', 
+                                  '#noVideoImage', 
+                                  '#lblMyVideo', 
+                                  '#lblRemoteVideo');
 });
 

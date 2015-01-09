@@ -84,6 +84,9 @@ width : 50%;
 .clear {
     clear : both;
 }
+#noVideoImage {
+    width : 40%;
+}
 .divEnterYourName {
    height : 100px;
    margin-top: 30px;
