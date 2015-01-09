@@ -81,6 +81,9 @@ width : 50%;
     width : 600px;
     max-width: 1000px !important;
 }
+#btnEnterYourName {
+    margin-left : 10px;
+}
 .clear {
     clear : both;
 }

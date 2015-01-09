@@ -1,12 +1,13 @@
 ﻿var clickAndTalk = clickAndTalk || {};
-clickAndTalk.webRTCPeerConnectionModule = (function () {
-
+clickAndTalk.webRTCPeerConnectionModule =(function () {
+    
     //private fields
     var pc, isStarted = false;// flag used to determine if the peer connection was initialized
-    var isChromeOrOpera = false;
-    var isFirefox = false;
     var remoteVideoSelector;
     var remoteVideoStream;
+    var RTCPeerConnection = window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+    var RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription;
+    var ICECandidate = window.RTCIceCandidate || window.mozRTCIceCandidate;
     // Set up audio and video regardless of what devices are present.
     var sdpConstraints = {
         'mandatory': {
@@ -30,15 +31,7 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
     //private methods
     var createPeerConnection = function () {
         try {
-            if (window.webkitRTCPeerConnection) {
-                isChromeOrOpera = true;
-                pc = new webkitRTCPeerConnection(configuration, options);
-            }
-            else if (window.mozRTCPeerConnection) {
-                isFirefox = true;
-                pc = new mozRTCPeerConnection(configuration, options);
-            }
-
+            pc = new RTCPeerConnection(configuration, options);
             pc.onicecandidate = function (event) {
                 if (event.candidate) {
                     clickAndTalk.sessionModule.sendVideoRelatedMessage({
@@ -78,44 +71,24 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
         clickAndTalk.sessionModule.sendVideoRelatedMessage(sessionDescription);
     };
     var setRemoteDescription = function (message) {
-        if (isFirefox) {
-        pc.setRemoteDescription(new mozRTCSessionDescription(message));
-        }
-        else if (isChromeOrOpera) {
         pc.setRemoteDescription(new RTCSessionDescription(message));
-        }
         console.log('setRemoteDescription');
     };
     var createAnswer = function (message) {
         
         setRemoteDescription(message);
         
-        if (isChromeOrOpera) {
-            pc.createAnswer(handleOfferAndAnswer, function (event) {
-                console.log('handle answer error');
-            }, sdpConstraints);
-        }
-        else if (isFirefox) {
-            pc.createAnswer(handleOfferAndAnswer, function (event) {
-                console.log('handle answer error');
-            }, sdpConstraints);
-        }
+        pc.createAnswer(handleOfferAndAnswer, function (event) {
+            console.log('handle answer error');
+        }, sdpConstraints);
+
         console.log('createAnswer');
     };
     var addIceCandidate = function (message) {
-        var candidate;
-        if (isChromeOrOpera) {
-            candidate = new RTCIceCandidate({
-                sdpMLineIndex: message.label,
-                candidate: message.candidate
-            });
-        }
-        else if (isFirefox) {
-            candidate = new mozRTCIceCandidate({
-                sdpMLineIndex: message.label,
-                candidate: message.candidate
-            });
-        }
+        var candidate = new ICECandidate({
+            sdpMLineIndex: message.label,
+            candidate: message.candidate
+        });
         pc.addIceCandidate(candidate);
         console.log('addIceCandidate');
     };
@@ -133,16 +106,9 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
                 isStarted = true;
                 
                 if (isInitiator) {
-                    if (isChromeOrOpera) {
-                        pc.createOffer(handleOfferAndAnswer, function (event) {
-                            console.log('createOffer() error: ', e);
-                        });
-                    }
-                    else if(isFirefox){
-                        pc.createOffer(handleOfferAndAnswer, function (event) {
-                            console.log('createOffer() error: ', e);
-                        }, sdpConstraints);
-                    }
+                    pc.createOffer(handleOfferAndAnswer, function (event) {
+                        console.log('createOffer() error: ', e);
+                    }, sdpConstraints);
                     console.log('create offer');
                 }
             }
