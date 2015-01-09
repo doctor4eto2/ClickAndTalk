@@ -43,7 +43,6 @@
     <Compile Include="models\Thread.js" />
     <Compile Include="public\javascripts\enterYourName.js" />
     <Compile Include="public\javascripts\home.js" />
-    <Compile Include="public\javascripts\modules\audioCodecModule.js" />
     <Compile Include="public\javascripts\modules\homeModule.js" />
     <Compile Include="public\javascripts\join.js" />
     <Compile Include="public\javascripts\modules\sessionModule.js" />

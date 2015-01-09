@@ -1,13 +1,14 @@
 ﻿var clickAndTalk = clickAndTalk || {};
-clickAndTalk.webRTCPeerConnectionModule =(function () {
+clickAndTalk.webRTCPeerConnectionModule = (function () {
     
     //private fields
     var pc, isStarted = false;// flag used to determine if the peer connection was initialized
-    var remoteVideoSelector;
-    var remoteVideoStream;
+    var remoteVideoSelector, remoteVideoStream;
+    //browser related hacks
     var RTCPeerConnection = window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
     var RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription;
     var ICECandidate = window.RTCIceCandidate || window.mozRTCIceCandidate;
+    var WindowURL = window.URL || webkitURL;
     // Set up audio and video regardless of what devices are present.
     var sdpConstraints = {
         'mandatory': {
@@ -45,16 +46,10 @@ clickAndTalk.webRTCPeerConnectionModule =(function () {
                 }
             };
             pc.onaddstream = function (event) {
-                console.log('Remote stream added.');
-                if (typeof (webkitURL) != 'undefined') {
-                    $(remoteVideoSelector).attr('src', webkitURL.createObjectURL(event.stream));
-                    $(remoteVideoSelector).show();
-                }
-                else if (typeof (window.URL) != 'undefined') {
-                    $(remoteVideoSelector).attr('src', window.URL.createObjectURL(event.stream));
-                    $(remoteVideoSelector).show();
-                }
+                $(remoteVideoSelector).attr('src', WindowURL.createObjectURL(event.stream));
+                $(remoteVideoSelector).show();
                 remoteVideoStream = event.stream;
+                console.log('Remote stream added.');
             };
             pc.onremovestream = function (event) {
                 console.log('Remote stream removed. Event: ', event);
@@ -66,40 +61,15 @@ clickAndTalk.webRTCPeerConnectionModule =(function () {
             return;
         }
     };
-    var handleOfferAndAnswer = function (sessionDescription) {
-        // Set Opus as the preferred codec in SDP if Opus is present. commented for now
-        //sessionDescription.sdp = clickAndTalk.audioCodecModule.preferOpus(sessionDescription.sdp);
-        pc.setLocalDescription(sessionDescription);
-        clickAndTalk.sessionModule.sendVideoRelatedMessage(sessionDescription);
-    };
-    var setRemoteDescription = function (message) {
-        pc.setRemoteDescription(new RTCSessionDescription(message));
-        console.log('setRemoteDescription');
-    };
-    var createAnswer = function (message) {
-        
-        setRemoteDescription(message);
-        
-        pc.createAnswer(handleOfferAndAnswer, function (event) {
-            console.log('handle answer error');
-        }, sdpConstraints);
-
-        console.log('createAnswer');
-    };
-    var addIceCandidate = function (message) {
-        var candidate = new ICECandidate({
-            sdpMLineIndex: message.label,
-            candidate: message.candidate
-        });
-        pc.addIceCandidate(candidate);
-        console.log('addIceCandidate');
-    };
 
     return {
         //public methods
-        init : function (remoteVideoSel, localVideoStream, isInitiator, isChannelReady) {
-            if (!isStarted && typeof localVideoStream != 'undefined' && isChannelReady) {
-                remoteVideoSelector = remoteVideoSel;
+        init : function () {
+            var localVideoStream = clickAndTalk.videoModule.getLocalStream();
+            var isInitiator = clickAndTalk.videoModule.isInitiator();
+
+            if (!isStarted && typeof localVideoStream != 'undefined' && clickAndTalk.videoModule.getChannelReady()) {
+                remoteVideoSelector = clickAndTalk.videoModule.getRemoteVideoSelector();
                 createPeerConnection(isInitiator);
 
                 pc.addStream(localVideoStream);
@@ -108,7 +78,11 @@ clickAndTalk.webRTCPeerConnectionModule =(function () {
                 isStarted = true;
                 
                 if (isInitiator) {
-                    pc.createOffer(handleOfferAndAnswer, function (event) {
+                    pc.createOffer(function (sessionDescription) {
+                        pc.setLocalDescription(sessionDescription);
+                        clickAndTalk.sessionModule.sendVideoRelatedMessage(sessionDescription);
+                    }, 
+                                    function (event) {
                         console.log('createOffer() error: ', e);
                     }, sdpConstraints);
                     console.log('create offer');
@@ -120,29 +94,35 @@ clickAndTalk.webRTCPeerConnectionModule =(function () {
             pc = null;
         },
         onVideoRelatedMessage : function (message) {
-            var isInitiator = clickAndTalk.videoModule.isInitiator();
-        
             if (message === 'user media allowed') {
-                clickAndTalk.webRTCPeerConnectionModule.init(clickAndTalk.videoModule.getRemoteVideoSelector(), 
-                                                             clickAndTalk.videoModule.getLocalStream(),
-                                                             isInitiator,
-                                                             clickAndTalk.videoModule.getChannelReady());
+                clickAndTalk.webRTCPeerConnectionModule.init();
             }
             else if (message.type === 'offer') {
-                if (!isInitiator && !isStarted) {
-                    clickAndTalk.webRTCPeerConnectionModule.init(clickAndTalk.videoModule.getRemoteVideoSelector(), 
-                                                                 clickAndTalk.videoModule.getLocalStream(),
-                                                                 isInitiator,
-                                                                 clickAndTalk.videoModule.getChannelReady());
+                if (!clickAndTalk.videoModule.isInitiator() && !isStarted) {
+                    clickAndTalk.webRTCPeerConnectionModule.init();
                 }
             
-                createAnswer(message);
+                pc.setRemoteDescription(new RTCSessionDescription(message));
+                pc.createAnswer(function (sessionDescription) {
+                    pc.setLocalDescription(sessionDescription);
+                    clickAndTalk.sessionModule.sendVideoRelatedMessage(sessionDescription);
+                },
+                        function (event) {
+                    console.log('handle answer error');
+                }, sdpConstraints);
+                
+                console.log('createAnswer');
             } 
             else if (message.type === 'answer' && isStarted) {
-                setRemoteDescription(message);
+                pc.setRemoteDescription(new RTCSessionDescription(message));
             } 
             else if (message.type === 'candidate' && isStarted) {
-                addIceCandidate(message);
+                var candidate = new ICECandidate({
+                    sdpMLineIndex: message.label,
+                    candidate: message.candidate
+                });
+                pc.addIceCandidate(candidate);
+                console.log('addIceCandidate');
             }
         }
     };

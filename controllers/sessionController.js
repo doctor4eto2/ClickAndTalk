@@ -11,7 +11,7 @@
         var parsedQueryString = urlModule.parse(req.url, true).query;        
 
         var shortIdModule = require('shortid');
-        res.render('join', {sessionId : shortIdModule.generate(), userName : parsedQueryString.userName});
+        res.render('join', {sessionId : shortIdModule.generate(), userName : parsedQueryString.userName, year: new Date().getFullYear()});
     };
     
     sessionController.join = function (req, res) {
@@ -24,7 +24,7 @@
                 res.render('enterYourName', { url : req.url });
             }
             else {
-                res.render('join', { sessionId : parsedQueryString.sessionId, userName : parsedQueryString.userName });
+                res.render('join', { sessionId : parsedQueryString.sessionId, userName : parsedQueryString.userName , year: new Date().getFullYear()});
             }
         }
         else {

@@ -5,7 +5,8 @@ clickAndTalk.videoModule = (function () {
     var localStream;
     var btnStartVideoSelector, btnStopVideoSelector, txtNumberOfUsersSelector, myVideoSelector, remoteVideoSelector, noVideoImageSelector, lblMyVideoSelector, lblRemoteVideoSelector;
     var isChannelReady = false, isInitiator = false;// flags used for determining if webrtc connection is initialized yet and if there is channel created yet
-    
+    var WindowURL = window.URL || webkitURL;
+
     //private methods
     var disableButton = function (btnSelector, enable) {
         if (!enable) {
@@ -44,17 +45,11 @@ clickAndTalk.videoModule = (function () {
         }
         
         function onStream(stream) {
-            localStream = stream;
-            console.log('Adding local stream.');
             var myVideo = $(myVideoSelector);
-
-            if (typeof (webkitURL) != 'undefined') {
-                myVideo.attr('src', webkitURL.createObjectURL(stream));
-            }
-            else if (typeof (window.URL) != 'undefined') {
-                myVideo.attr('src', window.URL.createObjectURL(stream));
-            }
+            localStream = stream;
+            myVideo.attr('src', WindowURL.createObjectURL(stream));
             $(myVideo)[0].load();
+            
             clickAndTalk.sessionModule.sendVideoRelatedMessage('user media allowed');
             
             $(noVideoImageSelector).hide();
@@ -65,10 +60,7 @@ clickAndTalk.videoModule = (function () {
             disableButton(btnStopVideoSelector, true);
 
             if (isInitiator) {
-                clickAndTalk.webRTCPeerConnectionModule.init(clickAndTalk.videoModule.getRemoteVideoSelector(), 
-                                                             clickAndTalk.videoModule.getLocalStream(),
-                                                             clickAndTalk.videoModule.isInitiator(),
-                                                             clickAndTalk.videoModule.getChannelReady());
+                clickAndTalk.webRTCPeerConnectionModule.init();
             }
             
             myVideo.on('error', function () {
