@@ -20,6 +20,13 @@ clickAndTalk.homeModule = (function () {
                     alert(userNameRequiredMessage);
                 }
             });
+            
+            $(userNameSelector).keypress(function (e) {
+                if (e.which == 13) // enter button
+                {
+                    $(btnCreateSessionSelector).click();
+                }
+            }); 
 
             $(btnJoinSessionSelector).click(function () {
                 var userName = $(userNameSelector).val();
