@@ -9,14 +9,12 @@
 }
 #homeMainTitle {
     text-align:left;
+    width : 600px;
 }
 .divHomeMainImage {
-    float:left;
-}
-.ulHomeCreateJoinSession {
-    float:left;
-    width : 500px;
-    margin-right : 20px;
+    float: right;
+    margin-right : 50px;
+    width : 450px;
 }
 .homeMainArea {
     height : 350px;
@@ -64,11 +62,6 @@ width : 50%;
     width : 400px;
     float : left;
 }
-#txtJoinChat {
-    height : 300px;
-
-}
-
 #hdnJoinSessionId {
 }
 
@@ -80,19 +73,25 @@ width : 50%;
 #txtJoinJoinUrl {
     width : 600px;
     max-width: 1000px !important;
+    float : left;
+    margin-left : 10px;
 }
 #btnEnterYourName {
     margin-left : 10px;
+    float : left;
+    margin-top: 5px;
 }
 .clear {
     clear : both;
 }
 .divEnterYourName {
    height : 100px;
-   margin-top  : 120px;
+   margin-top: 30px;
 }
 #txtNumberOfUsers{
-    width : 30px;
+    width : 40px;
+    float : left;
+    margin-left : 10px;
 }
 #lblMyVideo {
     margin-left : 60px;
@@ -120,4 +119,72 @@ width : 50%;
 }
 .control-camera-buttons{
     margin-left : 20px;
+}
+.jumbotron{
+ background-color : #CBE32D !important;   
+}
+.ulHomeCreateJoinSession {
+    float:left;
+    width : 500px;
+    margin-right : 20px;
+    background-color: #CBE32D;
+}
+#txtJoinChat {
+    height : 300px;
+    background-color: #F3FAB6 !important;
+}
+
+.jumbotron h1 {
+    color : black !important;
+}
+a{
+    color : #A8CD1B !important;
+}
+label {
+    color : black !important;
+}
+
+input {
+    background-color: #F3FAB6 !important;
+}
+h1,h2,h3,h4,h5,h6 {
+    color: white !important;
+}
+.btn {
+    color : #005A31 !important;
+    border-color : 005A31 !important;
+}
+.breadcrumb>li+li:before{
+    color:black !important;
+}
+#lblNumberOfConnectedUsers{
+    float:left;
+}
+#lblJoinUrl{
+    float:left;
+}
+#lblYourSessionId{
+    float:left;
+}
+#lblYourUserName{
+    float:left;
+}
+#txtSessionId{
+    float : left;
+    margin-left : 10px;
+}
+#txtUserName {
+    float : left;
+    margin-left : 10px;
+}
+a.contact_info {
+    color : white !important;
+}
+#txtEnterYourName {
+    float : left;
+    margin-left : 10px;
+    margin-top: 5px;
+}
+.left {
+    float : left;
 }

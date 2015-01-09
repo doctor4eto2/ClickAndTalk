@@ -6,17 +6,19 @@ block content
             .col-md-8
             .row
                 .userInfo
-                    label Your session Id is : #{sessionId}
-                    br
-                    label Your user name is : #{userName}
-                    br
-                    label Number of connected users: 
-                    input.btn-default#txtNumberOfUsers(type="text" value="", disabled ="true")
-                    br
-                    label Join Url : 
-                    input.btn-default#txtJoinJoinUrl(type="text" value="", disabled ="true")
-                    input.btn-default#hdnJoinSessionId(type="hidden" name="target" value="#{sessionId}")
-                    input.btn-default#hdnJoinUserName(type='hidden' name='target' value='#{userName}')
+                    label#lblYourSessionId Your session Id is : 
+                    input.btn-default.form-control#txtSessionId(type="text" value="#{sessionId}", disabled ="true") 
+                    br.clear
+                    label#lblYourUserName Your user name is : 
+                    input.btn-default.form-control#txtUserName(type="text" value="#{userName}", disabled ="true") 
+                    br.clear
+                    label#lblNumberOfConnectedUsers Number of connected users: 
+                    input.btn-default.form-control#txtNumberOfUsers(type="text" value="", disabled ="true")
+                    br.clear
+                    label#lblJoinUrl Join Url : 
+                    input.btn-default.form-control#txtJoinJoinUrl(type="text" value="", disabled ="true")
+                    input#hdnJoinSessionId(type="hidden" name="target" value="#{sessionId}")
+                    input#hdnJoinUserName(type='hidden' name='target' value='#{userName}')
                 .clear
             .col-md-4
             .row

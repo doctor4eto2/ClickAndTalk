@@ -2,6 +2,8 @@
 
 block content
     .jumbotron.homeMainArea
+        div.divHomeMainImage
+            img(id="homeMainImage" src="/images/video-conference-rental.jpg")
         h1(id="homeMainTitle") Click And Talk
         ul.breadcrumb.ulHomeCreateJoinSession
             li.liHomeCreateSession
@@ -11,8 +13,7 @@ block content
                 input#txtHomeUserName(type="text" class="form-control" placeholder="User name")
                 input#txtHomeJoinSessionId(type="text" class="form-control" placeholder="Session Id")
 
-        div.divHomeMainImage
-            img(id="homeMainImage" src="/images/video-conference-rental.jpg")
+        
 
 
 block scripts

@@ -40,6 +40,7 @@
     <Compile Include="controllers\homeController.js" />
     <Compile Include="controllers\index.js" />
     <Compile Include="controllers\sessionController.js" />
+    <Compile Include="models\Thread.js" />
     <Compile Include="public\javascripts\enterYourName.js" />
     <Compile Include="public\javascripts\home.js" />
     <Compile Include="public\javascripts\modules\audioCodecModule.js" />
@@ -92,6 +93,7 @@
   <ItemGroup>
     <Folder Include="controllers\" />
     <Folder Include="chatServerManager\" />
+    <Folder Include="models\" />
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\modules\" />
     <Folder Include="repositories\" />

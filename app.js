@@ -7,6 +7,15 @@ var express = require('express');
 var controllers = require('./controllers');
 var http = require('http');
 var path = require('path');
+var mongoose = require('mongoose');
+var threadModel = require('./models/Thread');
+
+//mongoose.connect('mongodb://localhost:27017/ClickAndTalk');
+//var con = mongoose.connection;
+//con.once('open', function () {
+//    console.log('Connection was successful');
+//    threadModel.seedThreads();
+//});
 
 var app = express();
 
