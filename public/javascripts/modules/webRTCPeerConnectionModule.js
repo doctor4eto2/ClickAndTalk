@@ -16,78 +16,108 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
     };
     var configuration = {
         iceServers: [
-                    { url: "stun:23.21.150.121" },
-                    { url: "stun:stun.l.google.com:19302" },
-                    { url: "turn:numb.viagenie.ca", credential: "webrtcdemo", username: "louis%40mozilla.com" }
-                ]
+                        { url: "stun:23.21.150.121" },
+                        { url: "stun:stun.l.google.com:19302" },
+                        { url: "turn:numb.viagenie.ca", credential: "webrtcdemo", username: "louis%40mozilla.com" }
+                    ]
+    };
+    var options = { optional: [
+                                { RtpDataChannels: true, },
+                                { DtlsSrtpKeyAgreement: true }
+                              ]
     };
 
     //private methods
-    var handleIceCandidate = function (event) {
-        if (event.candidate) {
-            clickAndTalk.sessionModule.sendVideoRelatedMessage({
-                type: 'candidate',
-                label: event.candidate.sdpMLineIndex,
-                id: event.candidate.sdpMid,
-                candidate: event.candidate.candidate
-            });
-        } else {
-            console.log('End of candidates.');
-        }
-    };
-    var handleRemoteStreamAdded = function (event) {
-        console.log('Remote stream added.');
-        if (typeof (webkitURL) != 'undefined') {
-            $(remoteVideoSelector).attr('src', webkitURL.createObjectURL(event.stream));
-        }
-        else if (typeof (window.URL) != 'undefined') {
-            $(remoteVideoSelector).attr('src', window.URL.createObjectURL(event.stream));
-        }
-        remoteVideoStream = event.stream;
-    };
-    var handleCreateOfferError = function (event) {
-        console.log('createOffer() error: ', e);
-    };
-    var handleRemoteStreamRemoved = function (event) {
-        console.log('Remote stream removed. Event: ', event);
-    };
-    var handleCreateOffer = function (sessionDescription) {
-        // Set Opus as the preferred codec in SDP if Opus is present.
-        sessionDescription.sdp = clickAndTalk.audioCodecModule.preferOpus(sessionDescription.sdp);
-        pc.setLocalDescription(sessionDescription);
-        clickAndTalk.sessionModule.sendVideoRelatedMessage(sessionDescription);
-    };
-    var handlerAnswerError = function (event) {
-        console.log('handle answer error');
-    };
     var createPeerConnection = function () {
         try {
             if (window.webkitRTCPeerConnection) {
                 isChromeOrOpera = true;
-                pc = new webkitRTCPeerConnection(configuration, {
-                    optional: [{
-                        RtpDataChannels: true
-                    }]
-                });
+                pc = new webkitRTCPeerConnection(configuration, options);
             }
             else if (window.mozRTCPeerConnection) {
                 isFirefox = true;
-                pc = new mozRTCPeerConnection(configuration, {
-                    optional: [{
-                        RtpDataChannels: true
-                    }]
-                });
+                pc = new mozRTCPeerConnection(configuration, options);
             }
 
-            pc.onicecandidate = handleIceCandidate;
-            pc.onaddstream = handleRemoteStreamAdded;
-            pc.onremovestream = handleRemoteStreamRemoved;
+            pc.onicecandidate = function (event) {
+                if (event.candidate) {
+                    clickAndTalk.sessionModule.sendVideoRelatedMessage({
+                        type: 'candidate',
+                        label: event.candidate.sdpMLineIndex,
+                        id: event.candidate.sdpMid,
+                        candidate: event.candidate.candidate
+                    });
+                } else {
+                    console.log('End of candidates.');
+                }
+            };
+            pc.onaddstream = function (event) {
+                console.log('Remote stream added.');
+                if (typeof (webkitURL) != 'undefined') {
+                    $(remoteVideoSelector).attr('src', webkitURL.createObjectURL(event.stream));
+                }
+                else if (typeof (window.URL) != 'undefined') {
+                    $(remoteVideoSelector).attr('src', window.URL.createObjectURL(event.stream));
+                }
+                remoteVideoStream = event.stream;
+            };
+            pc.onremovestream = function (event) {
+                console.log('Remote stream removed. Event: ', event);
+            };
             console.log('create webrtc connection');
 
         } catch (e) {
             console.log('Failed to create PeerConnection, exception: ' + e.message);
             return;
         }
+    };
+    var handleOfferAndAnswer = function (sessionDescription) {
+        // Set Opus as the preferred codec in SDP if Opus is present. commented for now
+        //sessionDescription.sdp = clickAndTalk.audioCodecModule.preferOpus(sessionDescription.sdp);
+        pc.setLocalDescription(sessionDescription);
+        clickAndTalk.sessionModule.sendVideoRelatedMessage(sessionDescription);
+    };
+    var setRemoteDescription = function (message) {
+        if (isFirefox) {
+        pc.setRemoteDescription(new mozRTCSessionDescription(message));
+        }
+        else if (isChromeOrOpera) {
+        pc.setRemoteDescription(new RTCSessionDescription(message));
+        }
+        console.log('setRemoteDescription');
+    };
+    var createAnswer = function (message) {
+        
+        setRemoteDescription(message);
+        
+        if (isChromeOrOpera) {
+            pc.createAnswer(handleOfferAndAnswer, function (event) {
+                console.log('handle answer error');
+            }, sdpConstraints);
+        }
+        else if (isFirefox) {
+            pc.createAnswer(handleOfferAndAnswer, function (event) {
+                console.log('handle answer error');
+            }, sdpConstraints);
+        }
+        console.log('createAnswer');
+    };
+    var addIceCandidate = function (message) {
+        var candidate;
+        if (isChromeOrOpera) {
+            candidate = new RTCIceCandidate({
+                sdpMLineIndex: message.label,
+                candidate: message.candidate
+            });
+        }
+        else if (isFirefox) {
+            candidate = new mozRTCIceCandidate({
+                sdpMLineIndex: message.label,
+                candidate: message.candidate
+            });
+        }
+        pc.addIceCandidate(candidate);
+        console.log('addIceCandidate');
     };
 
     return {
@@ -101,58 +131,51 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
                 console.log('add stream');
                 
                 isStarted = true;
-
+                
                 if (isInitiator) {
                     if (isChromeOrOpera) {
-                        pc.createOffer(handleCreateOffer, handleCreateOfferError);
+                        pc.createOffer(handleOfferAndAnswer, function (event) {
+                            console.log('createOffer() error: ', e);
+                        });
                     }
                     else if(isFirefox){
-                        pc.createOffer(handleCreateOffer, handleCreateOfferError, sdpConstraints);
+                        pc.createOffer(handleOfferAndAnswer, function (event) {
+                            console.log('createOffer() error: ', e);
+                        }, sdpConstraints);
                     }
                     console.log('create offer');
                 }
             }
         },
-        isStarted : function () { 
-            return isStarted;
+        stopWebRTCConnection : function (){
+            isStarted = false;
+            pc = null;
         },
-        setIsStarted : function (flag){
-            isStarted = flag;
-        },
-        addIceCandidate : function (message) { 
-            var candidate;
-            if (isChromeOrOpera) {
-                candidate = new RTCIceCandidate({
-                    sdpMLineIndex: message.label,
-                    candidate: message.candidate
-                });
+        onVideoRelatedMessage : function (message) {
+            var isInitiator = clickAndTalk.videoModule.isInitiator();
+        
+            if (message === 'user media allowed') {
+                clickAndTalk.webRTCPeerConnectionModule.init(clickAndTalk.videoModule.getRemoteVideoSelector(), 
+                                                             clickAndTalk.videoModule.getLocalStream(),
+                                                             isInitiator,
+                                                             clickAndTalk.videoModule.getChannelReady());
             }
-            else if (isFirefox) {
-                candidate = new mozRTCIceCandidate({
-                    sdpMLineIndex: message.label,
-                    candidate: message.candidate
-                });
+            else if (message.type === 'offer') {
+                if (!isInitiator && !isStarted) {
+                    clickAndTalk.webRTCPeerConnectionModule.init(clickAndTalk.videoModule.getRemoteVideoSelector(), 
+                                                                 clickAndTalk.videoModule.getLocalStream(),
+                                                                 isInitiator,
+                                                                 clickAndTalk.videoModule.getChannelReady());
+                }
+            
+                createAnswer(message);
+            } 
+            else if (message.type === 'answer' && isStarted) {
+                setRemoteDescription(message);
+            } 
+            else if (message.type === 'candidate' && isStarted) {
+                addIceCandidate(message);
             }
-            pc.addIceCandidate(candidate);
-            console.log('addIceCandidate');
-        },
-        createAnswer : function () {
-            if (isChromeOrOpera) {
-                pc.createAnswer(handleCreateOffer, handlerAnswerError, sdpConstraints);
-            }
-            else if (isFirefox) {
-                pc.createAnswer(handleCreateOffer, handlerAnswerError,sdpConstraints);
-            }
-            console.log('createAnswer');
-        },
-        setRemoteDescription : function (message) {
-            if (isFirefox) {
-                pc.setRemoteDescription(new mozRTCSessionDescription(message));
-            }
-            else if (isChromeOrOpera) {
-                pc.setRemoteDescription(new RTCSessionDescription(message));
-            }
-            console.log('setRemoteDescription');
         }
     };
 })();

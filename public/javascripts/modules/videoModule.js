@@ -95,7 +95,7 @@ clickAndTalk.videoModule = (function () {
                 $(remoteVideoSelector).attr('src', '');
                 disableButton(btnStartVideoSelector, true);
                 disableButton(btnStopVideoSelector, false);
-                clickAndTalk.webRTCPeerConnectionModule.setIsStarted(false);
+                clickAndTalk.webRTCPeerConnectionModule.stopWebRTCConnection();
             });
             startVideo();
         },

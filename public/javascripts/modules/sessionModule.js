@@ -48,37 +48,11 @@ clickAndTalk.sessionModule = (function () {
                         alert(pleaseEnterMessageText);
                     }
                 }
-            });
+            }); 
             
             //setting socket related handlers and join specific session
             socket.emit('join session', $(sessionIdSelector).val());
-            socket.on('video related message', function (message) {
-                var isInitiator = clickAndTalk.videoModule.isInitiator();
-                
-                if (message === 'user media allowed') {
-                    clickAndTalk.webRTCPeerConnectionModule.init(clickAndTalk.videoModule.getRemoteVideoSelector(), 
-                                                                 clickAndTalk.videoModule.getLocalStream(),
-                                                                 isInitiator,
-                                                                 clickAndTalk.videoModule.getChannelReady());
-                }
-                else if (message.type === 'offer') {
-                    if (!isInitiator && !clickAndTalk.webRTCPeerConnectionModule.isStarted()) {
-                        clickAndTalk.webRTCPeerConnectionModule.init(clickAndTalk.videoModule.getRemoteVideoSelector(), 
-                                                                     clickAndTalk.videoModule.getLocalStream(),
-                                                                     isInitiator,
-                                                                     clickAndTalk.videoModule.getChannelReady());
-                    }
-                    
-                    clickAndTalk.webRTCPeerConnectionModule.setRemoteDescription(message);
-                    clickAndTalk.webRTCPeerConnectionModule.createAnswer();
-                } 
-                else if (message.type === 'answer' && clickAndTalk.webRTCPeerConnectionModule.isStarted()) {
-                    clickAndTalk.webRTCPeerConnectionModule.setRemoteDescription(message);
-                } 
-                else if (message.type === 'candidate' && clickAndTalk.webRTCPeerConnectionModule.isStarted()) {
-                    clickAndTalk.webRTCPeerConnectionModule.addIceCandidate(message);
-                }
-            });
+            socket.on('video related message', clickAndTalk.webRTCPeerConnectionModule.onVideoRelatedMessage);
             socket.on('chat', function (data) { $(joinChatSelector).append('<p style="color:' + data.color + '"><b>' + data.message + '<b/><p/>') });
             socket.on('joined another user', function (numberOfUsers) {
                                                 if (numberOfUsers > 1) {
