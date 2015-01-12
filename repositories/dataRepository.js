@@ -30,7 +30,7 @@
     };
     //public methods
     dataRepository.init = function () {
-        mongoose.connect('mongodb://doctora:pa77word@ds031561.mongolab.com:31561/clickandtalk');
+        mongoose.connect('mongodb://test:test@ds031561.mongolab.com:31561/clickandtalk');
         var con = mongoose.connection;
         con.once('open', function () {
             seedThreads();
