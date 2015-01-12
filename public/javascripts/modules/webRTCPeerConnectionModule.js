@@ -23,12 +23,13 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
                         { url: "turn:numb.viagenie.ca", credential: "webrtcdemo", username: "louis%40mozilla.com" }
                     ]
     };
-    var options = { optional: [
-                                { RtpDataChannels: true, },
-                                { DtlsSrtpKeyAgreement: true }
-                              ]
+    var options = {
+        optional: [
+                      { RtpDataChannels: true, },
+                      { DtlsSrtpKeyAgreement: true }
+                  ]
     };
-
+    
     //private methods
     var createPeerConnection = function () {
         try {
@@ -41,20 +42,22 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
                         id: event.candidate.sdpMid,
                         candidate: event.candidate.candidate
                     });
-                } else {
-                    console.log('End of candidates.');
                 }
             };
             pc.onaddstream = function (event) {
                 $(remoteVideoSelector).attr('src', WindowURL.createObjectURL(event.stream));
                 $(remoteVideoSelector).show();
+                $(remoteVideoSelector).on('error', function () {
+                    remoteVideoStream.stop();
+                    clickAndTalk.videoModule.stopVideo();
+                });
                 remoteVideoStream = event.stream;
-                console.log('Remote stream added.');
+                remoteVideoStream.onended = function () {
+                    clickAndTalk.videoModule.stopVideo();
+                };
             };
             pc.onremovestream = function (event) {
-                console.log('Remote stream removed. Event: ', event);
             };
-            console.log('create webrtc connection');
 
         } catch (e) {
             console.log('Failed to create PeerConnection, exception: ' + e.message);
@@ -67,13 +70,12 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
         init : function () {
             var localVideoStream = clickAndTalk.videoModule.getLocalStream();
             var isInitiator = clickAndTalk.videoModule.isInitiator();
-
+            
             if (!isStarted && typeof localVideoStream != 'undefined' && clickAndTalk.videoModule.getChannelReady()) {
                 remoteVideoSelector = clickAndTalk.videoModule.getRemoteVideoSelector();
                 createPeerConnection(isInitiator);
-
+                
                 pc.addStream(localVideoStream);
-                console.log('add stream');
                 
                 isStarted = true;
                 
@@ -81,11 +83,7 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
                     pc.createOffer(function (sessionDescription) {
                         pc.setLocalDescription(sessionDescription);
                         clickAndTalk.sessionModule.sendVideoRelatedMessage(sessionDescription);
-                    }, 
-                                    function (event) {
-                        console.log('createOffer() error: ', e);
-                    }, sdpConstraints);
-                    console.log('create offer');
+                    }, function (event) {}, sdpConstraints);
                 }
             }
         },
@@ -106,12 +104,7 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
                 pc.createAnswer(function (sessionDescription) {
                     pc.setLocalDescription(sessionDescription);
                     clickAndTalk.sessionModule.sendVideoRelatedMessage(sessionDescription);
-                },
-                        function (event) {
-                    console.log('handle answer error');
-                }, sdpConstraints);
-                
-                console.log('createAnswer');
+                }, function (event) {}, sdpConstraints);
             } 
             else if (message.type === 'answer' && isStarted) {
                 pc.setRemoteDescription(new RTCSessionDescription(message));
@@ -122,7 +115,6 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
                     candidate: message.candidate
                 });
                 pc.addIceCandidate(candidate);
-                console.log('addIceCandidate');
             }
         }
     };

@@ -1,6 +1,7 @@
 ﻿(function (chatServerManager) {
     var socketIOModule = require('socket.io');
-    var colors = ['green', 'blue', 'red', 'yellow', 'black', 'orange', 'grey', 'brown', 'purple', 'pink'];
+    var dataRepository = require('.././repositories').dataRepository;
+    var colors = ['green', 'red', 'black','brown', 'purple'];
     var userColors = {};
     var usersPerSession = { };
     
@@ -9,35 +10,20 @@
         
         io.sockets.on('connection', function (socket) {
             socket.on('chat', function (data) {
-                
-                var d = new Date();
-                var hours = d.getHours();
-                var minutes = d.getMinutes();
-                
-                if (minutes < 10) {
-                    
-                    minutes = '0' + minutes;
-                }
-                
-                if (hours < 10) {
-                    
-                    hours = '0' + hours;
-                }
-                
-                var message = '>>> (' + hours + ':' + minutes + ') ' + data.userName + ' : ' + data.message;                
-                var color;
-                
                 if (!userColors[data.userName]) {
                     userColors[data.userName] = colors[Math.floor((Math.random() * 100) + 1) % colors.length];
                 }
-
-                color = userColors[data.userName];
                 
                 var dataToSend = 
                 {
-                    message : message, 
-                    color : color
+                    message : data.message, 
+                    color : userColors[data.userName],
+                    time : new Date().toString(),
+                    userName : data.userName,
+                    sessionId : data.sessionId
                 };
+                
+                dataRepository.saveThread(dataToSend);
                 
                 socket.broadcast.to(data.sessionId).emit('chat', dataToSend);
                 socket.client.sockets[0].emit('chat', dataToSend);//push back to the sender
@@ -60,9 +46,26 @@
                     usersPerSession[sessionId]++;
                     numberOfUsers = usersPerSession[sessionId];
                 }
-
-                socket.broadcast.to(sessionId).emit('joined another user', numberOfUsers);
-                socket.client.sockets[0].emit('joined successfully', numberOfUsers);
+                
+                var callHistoryQuery = dataRepository.getChatHistory(sessionId);
+                callHistoryQuery.exec(function (error, thread) {
+                    var result = [];
+                    
+                    if (thread != null) {
+                        for (var index = 0; index < thread.messages.length; index++) {
+                            result.push({
+                                userName : thread.messages[index].userName,
+                                message : thread.messages[index].message, 
+                                time : thread.messages[index].time, 
+                                color : thread.messages[index].color, 
+                                sessionId : thread.sessionId
+                            })
+                        }
+                    }
+                    
+                    socket.broadcast.to(sessionId).emit('joined another user', numberOfUsers);
+                    socket.client.sockets[0].emit('joined successfully', { numberOfUsers : numberOfUsers, chatHistory : result });
+                });
             });
         });
 

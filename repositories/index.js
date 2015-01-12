@@ -1,7 +1,7 @@
 ﻿(function (repositories) {
     
-    var databaseTestRepository = require('./databaseTestRepository');
+    var dataRepository = require('./dataRepository');
 
-    repositories.databaseTestRepository = databaseTestRepository;
+    repositories.dataRepository = dataRepository;
 
 })(module.exports);

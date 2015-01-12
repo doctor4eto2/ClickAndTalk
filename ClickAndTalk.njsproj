@@ -40,7 +40,6 @@
     <Compile Include="controllers\homeController.js" />
     <Compile Include="controllers\index.js" />
     <Compile Include="controllers\sessionController.js" />
-    <Compile Include="models\Thread.js" />
     <Compile Include="public\javascripts\enterYourName.js" />
     <Compile Include="public\javascripts\home.js" />
     <Compile Include="public\javascripts\modules\homeModule.js" />
@@ -49,7 +48,6 @@
     <Compile Include="public\javascripts\modules\videoModule.js" />
     <Compile Include="public\javascripts\modules\webRTCPeerConnectionModule.js" />
     <Compile Include="public\javascripts\wrongSessionId.js" />
-    <Compile Include="repositories\databaseTestRepository.js" />
     <Compile Include="repositories\index.js" />
   </ItemGroup>
   <ItemGroup>
@@ -93,7 +91,6 @@
   <ItemGroup>
     <Folder Include="controllers\" />
     <Folder Include="chatServerManager\" />
-    <Folder Include="models\" />
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\modules\" />
     <Folder Include="repositories\" />

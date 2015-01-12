@@ -50,6 +50,9 @@ clickAndTalk.videoModule = (function () {
             myVideo.attr('src', WindowURL.createObjectURL(stream));
             $(myVideo)[0].load();
             
+            stream.onended = function () {
+                clickAndTalk.videoModule.stopVideo();
+            };
             clickAndTalk.sessionModule.sendVideoRelatedMessage('user media allowed');
             
             $(noVideoImageSelector).hide();
@@ -65,13 +68,14 @@ clickAndTalk.videoModule = (function () {
             
             myVideo.on('error', function () {
                 stream.stop();
+                clickAndTalk.videoModule.stopVideo();
             });
         };
         function onError(error) {
+            clickAndTalk.videoModule.stopVideo();
             console.log(error);
         };
     }
-
     return {
         //public methods
         init : function (btnStartVideoSel, btnStopVideoSel, myVideoSel, txtNumberOfUsersSel, remoteVideoSel, noVideoImageSel, lblMyVideoSel, lblRemoteVideoSel) {
@@ -94,18 +98,21 @@ clickAndTalk.videoModule = (function () {
                 startVideo();
             });
             $(btnStopVideoSelector).click(function () {
-                $(myVideoSelector).attr('src', '');
-                $(myVideoSelector).hide();
-                $(remoteVideoSelector).attr('src', '');
-                $(remoteVideoSelector).hide();
-                $(noVideoImageSelector).show();
-                $(lblMyVideoSelector).hide();
-                $(lblRemoteVideoSelector).hide();
-                disableButton(btnStartVideoSelector, true);
-                disableButton(btnStopVideoSelector, false);
-                clickAndTalk.webRTCPeerConnectionModule.stopWebRTCConnection();
+                clickAndTalk.videoModule.stopVideo();
             });
             startVideo();
+        },
+        stopVideo : function () {
+            $(myVideoSelector).attr('src', '');
+            $(myVideoSelector).hide();
+            $(remoteVideoSelector).attr('src', '');
+            $(remoteVideoSelector).hide();
+            $(noVideoImageSelector).show();
+            $(lblMyVideoSelector).hide();
+            $(lblRemoteVideoSelector).hide();
+            disableButton(btnStartVideoSelector, true);
+            disableButton(btnStopVideoSelector, false);
+            clickAndTalk.webRTCPeerConnectionModule.stopWebRTCConnection();
         },
         setChannelCreated : function (){
             isChannelReady = true;
