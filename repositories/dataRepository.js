@@ -30,7 +30,9 @@
     };
     //public methods
     dataRepository.init = function () {
-        mongoose.connect('mongodb://localhost:27017/ClickAndTalk');
+	    //mongolab : 
+        mongoose.connect('mongodb://<mitko.hristov>:<pa77word>@ds031561.mongolab.com:31561/clickandtalk');
+        //mongoose.connect('mongodb://localhost:27017/ClickAndTalk');
         var con = mongoose.connection;
         con.once('open', function () {
             seedThreads();
