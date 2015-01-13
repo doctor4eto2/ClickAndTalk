@@ -1,5 +1,7 @@
 ﻿var clickAndTalk = clickAndTalk || {};
 clickAndTalk.videoModule = (function ($) {
+    "use strict";
+
     //private fields
     var _localStream;
     var _btnStartVideoSelector;
@@ -10,8 +12,9 @@ clickAndTalk.videoModule = (function ($) {
     var _noVideoImageSelector;
     var _lblMyVideoSelector;
     var _lblRemoteVideoSelector;
+    // flags used for determining webrtc initiator and if there is channel created yet
     var _isChannelReady = false;
-    var _isInitiator = false;// flags used for determining if webrtc connection is initialized yet and if there is channel created yet
+    var _isInitiator = false;
     //browser hacks
     var WindowURL = window.URL || webkitURL;
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;

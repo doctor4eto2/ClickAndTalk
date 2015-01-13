@@ -1,16 +1,19 @@
 ﻿var clickAndTalk = clickAndTalk || {};
 clickAndTalk.sessionModule = (function ($) {
+    "use strict";
+    
     //private fields
     var _sessionIdSelector;
     var _joinUrlSelector;
     var _joinChatSelector;
+    var _userNameSelector;
     var _socket = io.connect();
     
     //private methods
-    var sendChatMessage = function (message, hdnUserName, hdnSessionIdName, txtMessageName) {
-        var userName = $(hdnUserName).val();
+    var sendChatMessage = function (messageToSend, txtMessageName) {
+        var sender = $(_userNameSelector).val();
         
-        _socket.emit('chat', { message : message, sessionId : $(hdnSessionIdName).val(), userName : userName, sessionId : $(_sessionIdSelector).val() });
+        _socket.emit('chat', { message : messageToSend, userName : sender, sessionId : $(_sessionIdSelector).val() });
         $(txtMessageName).val('');
     };
     var appendTextMessage = function (data) {
@@ -35,17 +38,18 @@ clickAndTalk.sessionModule = (function ($) {
 
     return {
         //public methods
-        init : function (joinUrlSel, sessionIdSel, joinChatSel, btnEnterMessageSel, textMessageSel, userNameSel, pleaseEnterMessageText, noOtherParticipiantsSel, numberOfUsersSel) {
+        init : function (joinUrlSel, sessionIdSel, joinChatSel, btnEnterMessageSel, textMessageSel, userNameSel, pleaseEnterMessageText, noOtherParticipiantsSel, numberOfUsersSel, chatDashboardSel) {
             _sessionIdSelector = sessionIdSel;
             _joinUrlSelector = joinUrlSel;
             _joinChatSelector = joinChatSel;
+            _userNameSelector = userNameSel;
             
             //setting some event handlers
             $(btnEnterMessageSel).click(function () {
                 var textMessage = $(textMessageSel).val();
                 
                 if (textMessage) {
-                    sendChatMessage(textMessage, userNameSel, _sessionIdSelector, textMessageSel);
+                    sendChatMessage(textMessage, textMessageSel);
                 }
                 else {
                     alert(pleaseEnterMessageText);
@@ -58,13 +62,20 @@ clickAndTalk.sessionModule = (function ($) {
                     var textMessage = $(this).val();
                     
                     if (textMessage) {
-                        sendChatMessage(textMessage, userNameSel, _sessionIdSelector, textMessageSel);
+                        sendChatMessage(textMessage, textMessageSel);
                     }
                     else {
                         alert(pleaseEnterMessageText);
                     }
                 }
-            }); 
+            });
+            $(chatDashboardSel).click(function (e) {
+                if (!$(this).parent('li').hasClass('active')) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                }
+            });
+            $(chatDashboardSel).first().click();// setting default tab
             
             //setting socket related handlers and join specific session
             _socket.emit('join session', $(_sessionIdSelector).val());
@@ -100,12 +111,18 @@ clickAndTalk.sessionModule = (function ($) {
                 }
                 $(numberOfUsersSel).val(data.numberOfUsers);
             });
+            _socket.on('reload top votes', function (data) {
+                //add logic here for handling votes
+            });
 
             $(_joinUrlSelector).val(window.location.origin + '/session/join' + '?sessionId=' + $(_sessionIdSelector).val());
 
         },
         sendVideoRelatedMessage : function (message) {
             _socket.emit('video related message', { sessionId : $(_sessionIdSelector).val(), message : message });
+        },
+        voteForMessage : function (messageId) {
+            _socket.emit('vote for message', { sessionId : $(_sessionIdSelector).val(), userName : $(_userNameSelector).val(), messageId : messageId});
         },
         initializeWrongSessionIdBackButton : function (btnBackSelector, redirectUrl) {
             $(btnBackSelector).click(function () {

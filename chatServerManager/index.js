@@ -1,5 +1,6 @@
 ﻿(function (chatServerManager) {
     var socketIOModule = require('socket.io');
+    var shortIdModule = require('shortid');
     var dataRepository = require('.././repositories').dataRepository;
     var colors = ['green', 'red', 'black','brown', 'purple'];
     var userColors = {};
@@ -17,9 +18,12 @@
                 if (!userColors[data.sessionId][data.userName]){
                     userColors[data.sessionId][data.userName] = colors[Math.floor((Math.random() * 100) + 1) % colors.length];
                 }
+                
+                var messageId = shortIdModule.generate();
 
                 var dataToSend = 
                 {
+                    messageId : messageId,
                     message : data.message, 
                     color : userColors[data.sessionId][data.userName],
                     time : new Date().toString(),
@@ -35,6 +39,27 @@
             
             socket.on('video related message', function (data) {
                 socket.broadcast.to(data.sessionId).emit('video related message', data.message);
+            });
+            
+            socket.on('vote for message', function (data) {
+                dataRepository.voteForMessage(data);
+
+                var topVotesQuery = dataRepository.getThreadRating(data.sessionId);
+                topVotesQuery.exec(function (error, threadRating) {
+                    var sortedVotes = [];
+                    
+                    if (threadRating != null) {
+                        for (var index = 0; index < threadRating.stats.length; index++) {
+                            sortedVotes.push({
+                                messageId : threadRating.stats[index].messageId, 
+                                numberOfVotes : threadRating.stats[index].votes.length, 
+                                message : threadRating.stats[index].message
+                            });
+                        }
+                        sortedVotes.sort(function (a, b) { return b.numberOfVotes - a.numberOfVotes });
+                    }
+                    socket.broadcast.to(data.sessionId).emit('reload top votes', sortedVotes);
+                });
             });
 
             socket.on('join session', function (sessionId) {

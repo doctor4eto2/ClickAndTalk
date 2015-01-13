@@ -1,5 +1,7 @@
 ﻿var clickAndTalk = clickAndTalk || {};
 clickAndTalk.webRTCPeerConnectionModule = (function ($) {
+    "use strict";
+
     //private fields
     var _pc; 
     var _isStarted = false;// flag used to determine if the peer connection was initialized

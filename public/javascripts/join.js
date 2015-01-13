@@ -7,7 +7,8 @@
                                     '#hdnJoinUserName', 
                                     'Please enter a message!', 
                                     '#no-other-participiants', 
-                                    '#txtNumberOfUsers');
+                                    '#txtNumberOfUsers',
+                                    '#chatDashboard a');
     clickAndTalk.videoModule.init('#btnStartVideo', 
                                   '#btnStopVideo', 
                                   '#myVideo', 

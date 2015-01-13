@@ -1,5 +1,6 @@
 ﻿var clickAndTalk = clickAndTalk || {};
 clickAndTalk.homeModule = (function ($) {
+    "use strict";
     return {
         //public methods
         init : function (btnCreateSessionSelector, 

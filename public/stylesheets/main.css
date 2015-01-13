@@ -135,6 +135,13 @@ width : 50%;
 #txtJoinChat {
     height : 300px;
     background-color: #F3FAB6 !important;
+    border:none;
+}
+
+#txtTop5Threads {
+    height : 100px;
+    background-color: #F3FAB6 !important;
+    border:none;
 }
 
 .jumbotron h1 {
@@ -155,7 +162,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 .btn {
     color : #005A31 !important;
-    border-color : 005A31 !important;
+    border-color : #005A31 !important;
 }
 .breadcrumb>li+li:before{
     color:black !important;
@@ -190,4 +197,26 @@ a.contact_info {
 }
 .left {
     float : left;
+}
+.nav-tabs {
+    border-bottom: 0px solid !important;
+}
+.tab {
+    color: white !important;
+    margin-top: 10px;
+}
+#threadTabContent {
+    height: 370px;
+    margin: 20px 20px 20px 20px;
+}
+.tab-content.tab{
+    background-color : #F3FAB6;
+}
+#chatDashboard li.active a{
+    background-color: black;
+    color: white !important;
+}
+#chatDashboard li a {
+    background-color: black;
+    color: #A8CD1B !important;
 }

@@ -48,6 +48,7 @@
     <Compile Include="public\javascripts\modules\videoModule.js" />
     <Compile Include="public\javascripts\modules\webRTCPeerConnectionModule.js" />
     <Compile Include="public\javascripts\wrongSessionId.js" />
+    <Compile Include="repositories\dataRepository.js" />
     <Compile Include="repositories\index.js" />
   </ItemGroup>
   <ItemGroup>

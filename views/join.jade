@@ -33,10 +33,18 @@ block content
             .row
                 button#btnStartVideo(class="btn btn-default control-camera-buttons") Start Video
                 button#btnStopVideo(class="btn btn-default control-camera-buttons") Stop Video
-                .txtarea#txtJoinChat
-                input#txtJoinMessage(type="text" class="form-control" placeholder="Type a message here...")
-                button#btnEnterMessage(class="btn btn-default") Enter
-
+                ul.nav-tabs.nav#chatDashboard
+                    li.tab
+                        a(href="#threadTabContent") Thread
+                    li.tab
+                        a(href="#top5TabContent") Top 5 Comments
+                .tab-content.tab
+                    .tab-pane.fade#threadTabContent
+                        .txtarea#txtJoinChat
+                        input#txtJoinMessage(type="text" class="form-control" placeholder="Type a message here...")
+                        button#btnEnterMessage(class="btn btn-default") Enter
+                    .tab-pane.fade#top5TabContent
+                        .txtarea#txtTop5Threads
 
 block scripts
     script(src='/javascripts/join.js')
