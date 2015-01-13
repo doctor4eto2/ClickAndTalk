@@ -2,7 +2,6 @@
     clickAndTalk.sessionModule.init('#txtJoinJoinUrl', 
                                     '#hdnJoinSessionId', 
                                     '#txtJoinChat', 
-                                    '#txtJoinJoinUrl', 
                                     '#btnEnterMessage', 
                                     '#txtJoinMessage', 
                                     '#hdnJoinUserName', 

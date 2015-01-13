@@ -3,21 +3,25 @@
     var dataRepository = require('.././repositories').dataRepository;
     var colors = ['green', 'red', 'black','brown', 'purple'];
     var userColors = {};
-    var usersPerSession = { };
+    var usersPerSession = {};
     
     chatServerManager.init = function (server) {
         var io = socketIOModule.listen(server);
         
         io.sockets.on('connection', function (socket) {
             socket.on('chat', function (data) {
-                if (!userColors[data.userName]) {
-                    userColors[data.userName] = colors[Math.floor((Math.random() * 100) + 1) % colors.length];
+                if (!userColors[data.sessionId]) {
+                    userColors[data.sessionId] = {};
                 }
                 
+                if (!userColors[data.sessionId][data.userName]){
+                    userColors[data.sessionId][data.userName] = colors[Math.floor((Math.random() * 100) + 1) % colors.length];
+                }
+
                 var dataToSend = 
                 {
                     message : data.message, 
-                    color : userColors[data.userName],
+                    color : userColors[data.sessionId][data.userName],
                     time : new Date().toString(),
                     userName : data.userName,
                     sessionId : data.sessionId

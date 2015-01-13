@@ -1,5 +1,5 @@
 ﻿var clickAndTalk = clickAndTalk || {};
-clickAndTalk.homeModule = (function () {
+clickAndTalk.homeModule = (function ($) {
     return {
         //public methods
         init : function (btnCreateSessionSelector, 
@@ -46,4 +46,4 @@ clickAndTalk.homeModule = (function () {
             });
         }
     };
-})();
+})(jQuery);

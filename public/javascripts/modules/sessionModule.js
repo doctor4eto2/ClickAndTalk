@@ -1,18 +1,16 @@
 ﻿var clickAndTalk = clickAndTalk || {};
-clickAndTalk.sessionModule = (function () {
-    
+clickAndTalk.sessionModule = (function ($) {
     //private fields
-    var sessionIdSelector;
-    var joinUrlSelector;
-    var txtJoinChatSelector;
-    var joinUrlSelector;
-    var socket = io.connect();
+    var _sessionIdSelector;
+    var _joinUrlSelector;
+    var _joinChatSelector;
+    var _socket = io.connect();
     
     //private methods
     var sendChatMessage = function (message, hdnUserName, hdnSessionIdName, txtMessageName) {
         var userName = $(hdnUserName).val();
         
-        socket.emit('chat', { message : message, sessionId : $(hdnSessionIdName).val(), userName : userName, sessionId : $(sessionIdSelector).val() });
+        _socket.emit('chat', { message : message, sessionId : $(hdnSessionIdName).val(), userName : userName, sessionId : $(_sessionIdSelector).val() });
         $(txtMessageName).val('');
     };
     var appendTextMessage = function (data) {
@@ -32,23 +30,22 @@ clickAndTalk.sessionModule = (function () {
         
         var message = '>>> (' + hours + ':' + minutes + ') ' + data.userName + ' : ' + data.message;
         
-        $(joinChatSelector).append('<p style="color:' + data.color + '"><b>' + message + '<b/><p/>');
+        $(_joinChatSelector).append('<p style="color:' + data.color + '"><b>' + message + '<b/><p/>');
     };
 
     return {
         //public methods
-        init : function (joinUrlSel, sessionIdSel, joinChatSel, joinUrlSel, btnEnterMessageSel, textMessageSel, userNameSel, pleaseEnterMessageText, noOtherParticipiantsSel, numberOfUsersSel) {
-            sessionIdSelector = sessionIdSel;
-            joinUrlSelector = joinUrlSel;
-            joinChatSelector = joinChatSel;
-            joinUrlSelector = joinUrlSel;
+        init : function (joinUrlSel, sessionIdSel, joinChatSel, btnEnterMessageSel, textMessageSel, userNameSel, pleaseEnterMessageText, noOtherParticipiantsSel, numberOfUsersSel) {
+            _sessionIdSelector = sessionIdSel;
+            _joinUrlSelector = joinUrlSel;
+            _joinChatSelector = joinChatSel;
             
             //setting some event handlers
             $(btnEnterMessageSel).click(function () {
                 var textMessage = $(textMessageSel).val();
                 
                 if (textMessage) {
-                    sendChatMessage(textMessage, userNameSel, sessionIdSelector, textMessageSel);
+                    sendChatMessage(textMessage, userNameSel, _sessionIdSelector, textMessageSel);
                 }
                 else {
                     alert(pleaseEnterMessageText);
@@ -61,7 +58,7 @@ clickAndTalk.sessionModule = (function () {
                     var textMessage = $(this).val();
                     
                     if (textMessage) {
-                        sendChatMessage(textMessage, userNameSel, sessionIdSelector, textMessageSel);
+                        sendChatMessage(textMessage, userNameSel, _sessionIdSelector, textMessageSel);
                     }
                     else {
                         alert(pleaseEnterMessageText);
@@ -70,12 +67,12 @@ clickAndTalk.sessionModule = (function () {
             }); 
             
             //setting socket related handlers and join specific session
-            socket.emit('join session', $(sessionIdSelector).val());
-            socket.on('video related message', clickAndTalk.webRTCPeerConnectionModule.onVideoRelatedMessage);
-            socket.on('chat', function (data) {
+            _socket.emit('join session', $(_sessionIdSelector).val());
+            _socket.on('video related message', clickAndTalk.webRTCPeerConnectionModule.onVideoRelatedMessage);
+            _socket.on('chat', function (data) {
                 appendTextMessage(data);
             });
-            socket.on('joined another user', function (numberOfUsers) {
+            _socket.on('joined another user', function (numberOfUsers) {
                 if (numberOfUsers > 1) {
                     clickAndTalk.videoModule.setChannelCreated();
                     
@@ -86,7 +83,7 @@ clickAndTalk.sessionModule = (function () {
                 }
                 $(numberOfUsersSel).val(numberOfUsers);
             });
-            socket.on('joined successfully', function (data) {
+            _socket.on('joined successfully', function (data) {
                 
                 if (data.chatHistory != null) {
                     for (var index = 0; index < data.chatHistory.length; index++) {
@@ -104,11 +101,11 @@ clickAndTalk.sessionModule = (function () {
                 $(numberOfUsersSel).val(data.numberOfUsers);
             });
 
-            $(joinUrlSelector).val(window.location.origin + '/session/join' + '?sessionId=' + $(sessionIdSelector).val());
+            $(_joinUrlSelector).val(window.location.origin + '/session/join' + '?sessionId=' + $(_sessionIdSelector).val());
 
         },
         sendVideoRelatedMessage : function (message) {
-            socket.emit('video related message', { sessionId : $(sessionIdSelector).val(), message : message });
+            _socket.emit('video related message', { sessionId : $(_sessionIdSelector).val(), message : message });
         },
         initializeWrongSessionIdBackButton : function (btnBackSelector, redirectUrl) {
             $(btnBackSelector).click(function () {
@@ -141,4 +138,4 @@ clickAndTalk.sessionModule = (function () {
             });
         }
     };
-})();
+})(jQuery);
