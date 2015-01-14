@@ -207,16 +207,24 @@ a.contact_info {
 }
 #threadTabContent {
     height: 370px;
-    margin: 20px 20px 20px 20px;
+    margin: 0px 20px 20px 20px;
 }
 .tab-content.tab{
     background-color : #F3FAB6;
 }
 #chatDashboard li.active a{
-    background-color: black;
-    color: white !important;
-}
-#chatDashboard li a {
+    border-radius:0.2em;
     background-color: black;
     color: #A8CD1B !important;
+}
+#chatDashboard li a {
+    border-radius:0.2em;
+    background-color: #F3FAB6;
+    color: black !important;
+}
+.nav-tabs > li {
+    margin-bottom : -10px;
+}
+.nav-tabs > li > a {
+    margin : 0px 0px 0px 0px !important;    
 }
