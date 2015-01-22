@@ -54,10 +54,10 @@
                     sessionId : data.sessionId
                 };
                 
-                dataRepository.saveThread(dataToSend);
-                
-                socket.broadcast.to(data.sessionId).emit('chat', dataToSend);
-                socket.client.sockets[0].emit('chat', dataToSend);//push back to the sender
+                dataRepository.saveThread(dataToSend, function () { 
+                    socket.broadcast.to(data.sessionId).emit('chat', dataToSend);
+                    socket.client.sockets[0].emit('chat', dataToSend);//push back to the sender
+                });
             });
             
             socket.on('video related message', function (data) {

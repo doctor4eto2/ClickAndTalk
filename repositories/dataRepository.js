@@ -65,7 +65,7 @@
         Thread = mongoose.model('Thread', threadSchema);
         ThreadRating = mongoose.model('ThreadRating', threadRatingSchema);
     };
-    dataRepository.saveThread = function (data) {
+    dataRepository.saveThread = function (data, next) {
         Thread.findOne({ sessionId : data.sessionId }, function (error, thread) {
             if (error) {
                 console.log(error);
@@ -96,6 +96,9 @@
             thread.save(function (err) {
                 if (err) {
                     console.log('error when save');
+                }
+                else {
+                    next();
                 }
             });
         });
