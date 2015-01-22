@@ -19,7 +19,8 @@
                     messageId : threadRating.stats[index].messageId, 
                     numberOfVotes : threadRating.stats[index].votes.length, 
                     message : threadRating.stats[index].message,
-                    color : threadRating.stats[index].color
+                    color : threadRating.stats[index].color,
+                    votes : threadRating.stats[index].votes,
                 });
             }
             result.sort(function (a, b) { return b.numberOfVotes - a.numberOfVotes });

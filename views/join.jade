@@ -40,13 +40,13 @@ block content
                         .txtarea#txtJoinChat
                             p(ng-repeat="item in chatMessages" style="color : {{item.color}};")
                                 b {{item.message}}
-                                input.thumbUp(type="image" src="/images/Thumbs up.png" ng-click="thumbUp(item.messageId);" ng-show="{{item.show}}")
+                                input.thumbUp(type="image" src="/images/Thumbs up.png" ng-click="thumbUp(item.messageId);" ng-show="item.show")
                         input#txtJoinMessage(type="text" class="form-control" placeholder="Type a message here...", ng-model="message" ng-keypress="onEnterMessage('Please enter a message!', $event)")
                         button#btnEnterMessage(class="btn btn-default" ng-click="enterMessage('Please enter a message!')") Enter
                     .tab-pane.fade#top5TabContent
                         .txtarea#txtTop5Threads
                             p(ng-repeat="item in top5" style="color : {{item.color}}")
-                                b {{$index + 1}}. {{item.message}} ({{item.numberOfVotes}} votes)
+                                b {{$index + 1}}. {{item.message}} ({{item.numberOfVotes}} votes{{item.votes}})
 
 block scripts
     script.
