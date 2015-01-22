@@ -1,12 +1,14 @@
 ﻿extends layout
 
 block content
-    .jumbotron
+    .jumbotron(ng-controller="enterYourNameController")
         .divEnterYourName
             label.left Please enter your name :
-            input.form-control#txtEnterYourName(type="text")
-            button#btnEnterYourName(class ="btn btn-default") Enter
-            input#hdnEnterYourNamePrevousRequestUrl(type="hidden" value="#{url}")
-        
+            input.form-control#txtEnterYourName(type="text" ng-model="name" ng-keypress="onEnter('Please enter your name!', $event)")
+            button#btnEnterYourName(class ="btn btn-default" ng-click="enterYourName('Please enter your name!')") Enter
 block scripts
-    script(src='/javascripts/enterYourName.js')
+    script(src='/javascripts/controllers/enterYourNameController.js')
+    script.
+        clickAndTalk = clickAndTalk || {};
+        clickAndTalk.enterYourNameController = clickAndTalk.enterYourNameController || {};
+        clickAndTalk.enterYourNameController.previousRequestedUrl = '#{url}';

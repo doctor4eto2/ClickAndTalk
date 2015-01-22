@@ -40,20 +40,20 @@
     <Compile Include="controllers\homeController.js" />
     <Compile Include="controllers\index.js" />
     <Compile Include="controllers\sessionController.js" />
-    <Compile Include="public\javascripts\enterYourName.js" />
-    <Compile Include="public\javascripts\home.js" />
-    <Compile Include="public\javascripts\modules\homeModule.js" />
-    <Compile Include="public\javascripts\join.js" />
+    <Compile Include="public\javascripts\controllers\enterYourNameController.js" />
+    <Compile Include="public\javascripts\controllers\homeController.js" />
+    <Compile Include="public\javascripts\controllers\joinController.js" />
+    <Compile Include="public\javascripts\controllers\wrongSessionIdController.js" />
     <Compile Include="public\javascripts\modules\sessionModule.js" />
     <Compile Include="public\javascripts\modules\videoModule.js" />
     <Compile Include="public\javascripts\modules\webRTCPeerConnectionModule.js" />
-    <Compile Include="public\javascripts\wrongSessionId.js" />
     <Compile Include="repositories\dataRepository.js" />
     <Compile Include="repositories\index.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="public\images\join-room.png" />
     <Content Include="public\images\no-other-participiants.png" />
+    <Content Include="public\images\Thumbs up.png" />
     <Content Include="public\images\video-conference-rental.jpg" />
     <Content Include="public\images\no_video.jpg" />
     <Content Include="public\javascripts\bootstrap.js" />
@@ -93,6 +93,7 @@
     <Folder Include="controllers\" />
     <Folder Include="chatServerManager\" />
     <Folder Include="public\images\" />
+    <Folder Include="public\javascripts\controllers\" />
     <Folder Include="public\javascripts\modules\" />
     <Folder Include="repositories\" />
     <Folder Include="public\" />

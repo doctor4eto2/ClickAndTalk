@@ -17,7 +17,8 @@
         sessionId : { type : String, index: true },
         stats : [{
             messageId : { type : String },
-            message : {type : String },
+            message : { type : String },
+            color : { type : String },
             votes : { type : [String] }
         }]
     });
@@ -84,7 +85,7 @@
                 thread = new Thread({
                     sessionId : data.sessionId,
                     messages : [{
-                        message : data.messageId,
+                        messageId : data.messageId,
                         userName : data.userName,
                         message : data.message, 
                         time : data.time, 
@@ -99,7 +100,7 @@
             });
         });
     };
-    dataRepository.voteForMessage = function (data) {
+    dataRepository.voteForMessage = function (data, next) {
         ThreadRating.findOne({ sessionId : data.sessionId }, function (error, threadRating) {
             if (error) {
                 console.log(error);
@@ -121,7 +122,7 @@
                     threadRating.stats[index].votes.push(data.userName);
                 }
                 else {
-                    threadRating.stats.push({messageId : data.messageId, message : data.message, votes : [data.userName] });
+                    threadRating.stats.push({messageId : data.messageId, message : data.message, color : data.color,votes : [data.userName] });
                 }
             }
             else {
@@ -130,6 +131,7 @@
                     stats : [{
                         messageId : data.messageId,
                         message : data.message,
+                        color : data.color,
                         votes : [data.userName]
                     }]
                 });
@@ -137,6 +139,9 @@
             threadRating.save(function (err) {
                 if (err) {
                     console.log('error when save');
+                }
+                else {
+                    next();
                 }
             });
         });

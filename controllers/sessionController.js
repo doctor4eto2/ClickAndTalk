@@ -1,6 +1,8 @@
 ﻿(function (sessionController) {
+    // module references
     var urlModule = require('url');
-
+    
+    // public methods
     sessionController.init = function (app, io) {
         app.get('/session/create', sessionController.create);
         app.get('/session/join', sessionController.join);

@@ -48,9 +48,6 @@ img{
 .video{
  	background-color: black;
  }
-#no-other-participiants {
-width : 50%;
-}
 #joinRoom {
 width : 50%;
 }
@@ -137,9 +134,8 @@ width : 50%;
     background-color: #F3FAB6 !important;
     border:none;
 }
-
 #txtTop5Threads {
-    height : 100px;
+    height : 200px;
     background-color: #F3FAB6 !important;
     border:none;
 }
@@ -209,6 +205,9 @@ a.contact_info {
     height: 370px;
     margin: 0px 20px 20px 20px;
 }
+#top5TabContent {
+    margin: 0px 20px 20px 20px;
+}
 .tab-content.tab{
     background-color : #F3FAB6;
 }
@@ -227,4 +226,9 @@ a.contact_info {
 }
 .nav-tabs > li > a {
     margin : 0px 0px 0px 0px !important;    
+}
+.thumbUp{
+    width : 16px;
+    height : 16px;
+    margin-left : 5px;
 }

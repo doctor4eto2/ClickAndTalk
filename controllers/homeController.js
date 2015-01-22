@@ -1,5 +1,5 @@
 ﻿(function (homeController) {
-    
+    // public methods
     homeController.init = function (app, io) {
         app.get('/', homeController.index);
         app.get('/about', homeController.about);

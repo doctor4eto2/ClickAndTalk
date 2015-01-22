@@ -7,7 +7,7 @@ html
     link(rel='stylesheet', type='text/css', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', type='text/css', href='/stylesheets/style.css')
     link(rel='stylesheet', type='text/css', href='/stylesheets/main.css')
-  body
+  body(ng-app="clickAndTalk")
     .navbar.navbar-inverse.navbar-fixed-top
       .container
         .navbar-header
@@ -36,11 +36,14 @@ html
     script(src='/javascripts/jquery.validate.min.js')
     script(src='/lib/jquery-ui/jquery-ui.min.js')
     script(src='/lib/angular/angular.min.js') 
+    script(src='/lib/angular-route/angular-route.min.js') 
+    script.
+        var app = angular.module('clickAndTalk', ['ngRoute']);
     script(src='/lib/socket.io-client/socket.io.js') 
     script(src='/javascripts/respond.js')
-    script(src='/javascripts/modules/homeModule.js')
     script(src='/javascripts/modules/sessionModule.js')
     script(src='/javascripts/modules/webRTCPeerConnectionModule.js')
     script(src='/javascripts/modules/videoModule.js')
+ 
     block scripts
 
