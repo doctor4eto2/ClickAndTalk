@@ -63,25 +63,19 @@
             var hours = d.getHours();
             var minutes = d.getMinutes();
             
-            if (minutes < 10) {
-                minutes = '0' + minutes;
-            }
-            
-            if (hours < 10) {
-                hours = '0' + hours;
-            }
+            minutes = (minutes < 10) ? '0' + minutes : minutes;
+            hours = (hours < 10) ? '0' + hours : hours;
             
             var message = '>>> (' + hours + ':' + minutes + ') ' + data.userName + ' : ' + data.message;
-            var rowMessage = data.userName + ' : ' + data.message;
             
-            $scope.chatMessages.push({ message : message, color : data.color, messageId : data.messageId, show : true, rawMessage : rowMessage });
+            $scope.chatMessages.push({ message : message, color : data.color, messageId : data.messageId, show : true, rawMessage : data.message, creator : data.userName });
             $scope.$apply();
         };
         $scope.thumbUp = function (messageId) {
             for (var index = 0; index < $scope.chatMessages.length; index++) {
                 if ($scope.chatMessages[index].messageId == messageId) {
                     $scope.chatMessages[index].show = false;
-                    clickAndTalk.sessionModule.voteForMessage(messageId, $scope.chatMessages[index].rawMessage, $scope.chatMessages[index].color);
+                    clickAndTalk.sessionModule.voteForMessage(messageId, $scope.chatMessages[index].rawMessage, $scope.chatMessages[index].color, $scope.chatMessages[index].creator);
                     break;
                 }
             }

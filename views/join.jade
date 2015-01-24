@@ -21,8 +21,8 @@ block content
             .col-md-4
             .row
             .videos
-                video.embed-responsive-item#myVideo(width='320', height='240', muted="muted", autoplay ng-show="videoElementsVisibility.showVideoRelatedElements")
-                video.embed-responsive-item#remoteVideo(width='320', height='240', autoplay ng-show="videoElementsVisibility.showRemoteVideo")
+                video.embed-responsive-item#myVideo(muted="muted", autoplay ng-show="videoElementsVisibility.showVideoRelatedElements")
+                video.embed-responsive-item#remoteVideo(autoplay ng-show="videoElementsVisibility.showRemoteVideo")
                 img#noVideoImage(src="/images/no_video.jpg" ng-show="!videoElementsVisibility.showVideoRelatedElements")
                 label#lblMyVideo( ng-show="videoElementsVisibility.showVideoRelatedElements") Your Video Camera
                 label#lblRemoteVideo(ng-show="videoElementsVisibility.showVideoRelatedElements") Remote Camera
@@ -47,7 +47,7 @@ block content
                     .tab-pane.fade#top5TabContent
                         .txtarea#txtTop5Threads
                             p(ng-repeat="item in top5" style="color : {{item.color}}")
-                                b {{$index + 1}}. {{item.message}} ({{item.numberOfVotes}} votes{{item.votes}})
+                                b {{$index + 1}}. {{item.creator}} : {{item.message}} ({{item.numberOfVotes}} votes{{item.votes}})
 
 block scripts
     script.

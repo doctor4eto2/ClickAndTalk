@@ -19,6 +19,7 @@
             messageId : { type : String },
             message : { type : String },
             color : { type : String },
+            creator : {type : String },
             votes : { type : [String] }
         }]
     });
@@ -125,7 +126,7 @@
                     threadRating.stats[index].votes.push(data.userName);
                 }
                 else {
-                    threadRating.stats.push({messageId : data.messageId, message : data.message, color : data.color,votes : [data.userName] });
+                    threadRating.stats.push({messageId : data.messageId, message : data.message, color : data.color, creator : data.creator, votes : [data.userName]});
                 }
             }
             else {
@@ -135,6 +136,7 @@
                         messageId : data.messageId,
                         message : data.message,
                         color : data.color,
+                        creator : data.creator,
                         votes : [data.userName]
                     }]
                 });

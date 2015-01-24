@@ -20,6 +20,7 @@
                         messageId : threadRating.stats[index].messageId, 
                         numberOfVotes : threadRating.stats[index].votes.length, 
                         message : threadRating.stats[index].message,
+                        creator : threadRating.stats[index].creator,
                         color : threadRating.stats[index].color,
                         votes : threadRating.stats[index].votes,
                     });

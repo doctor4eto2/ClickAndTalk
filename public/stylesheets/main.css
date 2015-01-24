@@ -107,11 +107,15 @@ width : 50%;
 #myVideo {
     margin-top : 20px;
     float : left;
+    width : 320px;
+    height : 240px;
 }
 #remoteVideo {
     margin-top : 20px;
     margin-left : 20px;
     float : left;
+    width : 320px;
+    height : 240px;
 }
 .clear
 {

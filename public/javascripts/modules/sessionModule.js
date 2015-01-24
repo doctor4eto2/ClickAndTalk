@@ -55,8 +55,8 @@ clickAndTalk.sessionModule = (function () {
             _socket.emit('chat', { message : messageToSend, userName : _userName, sessionId : _sessionId });
             next();
         },
-        voteForMessage : function (messageId, message, color) {
-            _socket.emit('vote for message', { sessionId : _sessionId, userName : _userName, messageId : messageId, message : message, color : color});
+        voteForMessage : function (messageId, message, color, creator) {
+            _socket.emit('vote for message', { sessionId : _sessionId, userName : _userName, messageId : messageId, message : message, color : color, creator : creator});
         },
         unvoteForMessage : function (messageId) {
             _socket.emit('unvote for message', { sessionId : _sessionId, userName : _userName, messageId : messageId });

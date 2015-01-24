@@ -70,7 +70,7 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
             var isInitiator = clickAndTalk.videoModule.isInitiator();
             
             if (!_isStarted && typeof localVideoStream != 'undefined' && clickAndTalk.videoModule.getChannelReady()) {
-                createPeerConnection(isInitiator);
+                createPeerConnection();
                 
                 _pc.addStream(localVideoStream);
                 
