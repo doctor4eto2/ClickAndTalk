@@ -21,15 +21,15 @@ block content
             .col-md-4
             .row
             .videos
-                video.embed-responsive-item#myVideo(width='320', height='240', muted="muted", autoplay)
-                video.embed-responsive-item#remoteVideo(width='320', height='240', autoplay)
-                img#noVideoImage(src="/images/no_video.jpg")
-                label#lblMyVideo Your Video Camera
-                label#lblRemoteVideo Remote Camera
+                video.embed-responsive-item#myVideo(width='320', height='240', muted="muted", autoplay ng-show="videoElementsVisibility.showVideoRelatedElements")
+                video.embed-responsive-item#remoteVideo(width='320', height='240', autoplay ng-show="videoElementsVisibility.showRemoteVideo")
+                img#noVideoImage(src="/images/no_video.jpg" ng-show="!videoElementsVisibility.showVideoRelatedElements")
+                label#lblMyVideo( ng-show="videoElementsVisibility.showVideoRelatedElements") Your Video Camera
+                label#lblRemoteVideo(ng-show="videoElementsVisibility.showVideoRelatedElements") Remote Camera
             .clear
             .row
-                button#btnStartVideo(class="btn btn-default control-camera-buttons") Start Video
-                button#btnStopVideo(class="btn btn-default control-camera-buttons") Stop Video
+                button#btnStartVideo(class="btn btn-default control-camera-buttons", ng-click="startVideo();" ng-disabled="videoElementsVisibility.disableStartVideo") Start Video
+                button#btnStopVideo(class="btn btn-default control-camera-buttons" ng-click="stopVideo();" ng-disabled="videoElementsVisibility.disableStopVideo") Stop Video
                 ul.nav-tabs.nav#chatDashboard
                     li.tab.active
                         a(href="#threadTabContent", showtab="") Thread
@@ -40,7 +40,8 @@ block content
                         .txtarea#txtJoinChat
                             p(ng-repeat="item in chatMessages" style="color : {{item.color}};")
                                 b {{item.message}}
-                                input.thumbUp(type="image" src="/images/Thumbs up.png" ng-click="thumbUp(item.messageId);" ng-show="item.show")
+                                input.thumbUp(type="image" src="/images/Thumbs_up.png" ng-click="thumbUp(item.messageId);" ng-show="item.show")
+                                input.thumbDown(type="image" src="/images/Thumbs_down.png" ng-click="thumbDown(item.messageId);" ng-show="!item.show")
                         input#txtJoinMessage(type="text" class="form-control" placeholder="Type a message here...", ng-model="message" ng-keypress="onEnterMessage('Please enter a message!', $event)")
                         button#btnEnterMessage(class="btn btn-default" ng-click="enterMessage('Please enter a message!')") Enter
                     .tab-pane.fade#top5TabContent

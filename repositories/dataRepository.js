@@ -149,6 +149,43 @@
             });
         });
     };
+    dataRepository.unvoteForMessage = function (data, next) {
+        ThreadRating.findOne({ sessionId : data.sessionId }, function (error, threadRating) {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            
+            if (threadRating) {
+                var exists = false;
+                var index = 0;// the index of the required message, valid only if exists = true
+                
+                for (; index < threadRating.stats.length; index++) {
+                    if (threadRating.stats[index].messageId == data.messageId) {
+                        exists = true;
+                        break;
+                    }
+                }
+                
+                if (exists) {
+                    var voteIndex = threadRating.stats[index].votes.indexOf(data.userName);
+                    
+                    if (voteIndex > -1) {
+                        threadRating.stats[index].votes.splice(voteIndex, 1);
+                    }
+                }
+
+                threadRating.save(function (err) {
+                    if (err) {
+                        console.log('error when save');
+                    }
+                    else {
+                        next();
+                    }
+                });
+            }
+        });
+    };
     dataRepository.getThreadRating = function (sessionId) {
         return ThreadRating.findOne({ sessionId : sessionId });
     };

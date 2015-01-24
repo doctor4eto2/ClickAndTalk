@@ -15,13 +15,15 @@
         
         if (threadRating != null) {
             for (var index = 0; index < threadRating.stats.length; index++) {
-                result.push({
-                    messageId : threadRating.stats[index].messageId, 
-                    numberOfVotes : threadRating.stats[index].votes.length, 
-                    message : threadRating.stats[index].message,
-                    color : threadRating.stats[index].color,
-                    votes : threadRating.stats[index].votes,
-                });
+                if (threadRating.stats[index].votes.length > 0) {
+                    result.push({
+                        messageId : threadRating.stats[index].messageId, 
+                        numberOfVotes : threadRating.stats[index].votes.length, 
+                        message : threadRating.stats[index].message,
+                        color : threadRating.stats[index].color,
+                        votes : threadRating.stats[index].votes,
+                    });
+                }
             }
             result.sort(function (a, b) { return b.numberOfVotes - a.numberOfVotes });
         }
@@ -67,6 +69,18 @@
             
             socket.on('vote for message', function (data) {
                 dataRepository.voteForMessage(data, function () { 
+                    var topVotesQuery = dataRepository.getThreadRating(data.sessionId);
+                    topVotesQuery.exec(function (error, threadRating) {
+                        var sortedVotes = sortVotes(threadRating);
+                        
+                        socket.broadcast.to(data.sessionId).emit('reload top votes', sortedVotes);
+                        socket.client.sockets[0].emit('reload top votes', sortedVotes);
+                    });
+                });
+            });
+            
+            socket.on('unvote for message', function (data) {
+                dataRepository.unvoteForMessage(data, function () {
                     var topVotesQuery = dataRepository.getThreadRating(data.sessionId);
                     topVotesQuery.exec(function (error, threadRating) {
                         var sortedVotes = sortVotes(threadRating);

@@ -1,11 +1,10 @@
 ﻿var clickAndTalk = clickAndTalk || {};
-clickAndTalk.webRTCPeerConnectionModule = (function ($) {
+clickAndTalk.webRTCPeerConnectionModule = (function () {
     "use strict";
 
     //private fields
     var _pc; 
     var _isStarted = false;// flag used to determine if the peer connection was initialized
-    var _remoteVideoSelector;
     var _remoteVideoStream;
     // Set up audio and video regardless of what devices are present.
     var _sdpConstraints = {
@@ -49,12 +48,7 @@ clickAndTalk.webRTCPeerConnectionModule = (function ($) {
                 }
             };
             _pc.onaddstream = function (event) {
-                $(_remoteVideoSelector).attr('src', WindowURL.createObjectURL(event.stream));
-                $(_remoteVideoSelector).show();
-                $(_remoteVideoSelector).on('error', function () {
-                    _remoteVideoStream.stop();
-                    clickAndTalk.videoModule.stopVideo();
-                });
+                clickAndTalk.videoModule.onRemoteVideoStart(event.stream);
                 _remoteVideoStream = event.stream;
                 _remoteVideoStream.onended = function () {
                     clickAndTalk.videoModule.stopVideo();
@@ -76,7 +70,6 @@ clickAndTalk.webRTCPeerConnectionModule = (function ($) {
             var isInitiator = clickAndTalk.videoModule.isInitiator();
             
             if (!_isStarted && typeof localVideoStream != 'undefined' && clickAndTalk.videoModule.getChannelReady()) {
-                _remoteVideoSelector = clickAndTalk.videoModule.getRemoteVideoSelector();
                 createPeerConnection(isInitiator);
                 
                 _pc.addStream(localVideoStream);
@@ -91,7 +84,7 @@ clickAndTalk.webRTCPeerConnectionModule = (function ($) {
                 }
             }
         },
-        stopWebRTCConnection : function (){
+        close : function (){
             _isStarted = false;
             _pc = null;
         },
@@ -120,6 +113,9 @@ clickAndTalk.webRTCPeerConnectionModule = (function ($) {
                 });
                 _pc.addIceCandidate(candidate);
             }
+            else if (message.type === 'bye' && _isStarted) {
+                clickAndTalk.webRTCPeerConnectionModule.close();
+            }
         }
     };
-})(jQuery);
+})();

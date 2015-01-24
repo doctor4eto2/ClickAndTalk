@@ -232,3 +232,9 @@ a.contact_info {
     height : 16px;
     margin-left : 5px;
 }
+.thumbDown {
+    width : 16px;
+    height : 16px;
+    margin-left : 5px;
+    vertical-align: bottom;
+}

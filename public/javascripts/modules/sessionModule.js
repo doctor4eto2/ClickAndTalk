@@ -1,5 +1,5 @@
 ﻿var clickAndTalk = clickAndTalk || {};
-clickAndTalk.sessionModule = (function ($) {
+clickAndTalk.sessionModule = (function () {
     "use strict";
     
     //private fields
@@ -57,6 +57,9 @@ clickAndTalk.sessionModule = (function ($) {
         },
         voteForMessage : function (messageId, message, color) {
             _socket.emit('vote for message', { sessionId : _sessionId, userName : _userName, messageId : messageId, message : message, color : color});
+        },
+        unvoteForMessage : function (messageId) {
+            _socket.emit('unvote for message', { sessionId : _sessionId, userName : _userName, messageId : messageId });
         }
     };
-})(jQuery);
+})();
