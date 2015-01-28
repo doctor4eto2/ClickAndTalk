@@ -4,7 +4,7 @@
         myVideoSelector : '#myVideo',
         remoteVideoSelector : '#remoteVideo',
         applyStreamToVideoElement : function (videoElementSelector, stream, onError) {
-            var WindowURL = window.URL || webkitURL;
+            var WindowURL = window.URL || window.webkitURL;
             var video = $(videoElementSelector);
             video.attr('src', WindowURL.createObjectURL(stream));
             video.on('error', onError);

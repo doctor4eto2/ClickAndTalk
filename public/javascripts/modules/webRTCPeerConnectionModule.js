@@ -31,7 +31,7 @@ clickAndTalk.webRTCPeerConnectionModule = (function () {
     var RTCPeerConnection = window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
     var RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription;
     var ICECandidate = window.RTCIceCandidate || window.mozRTCIceCandidate;
-    var WindowURL = window.URL || webkitURL;
+    var WindowURL = window.URL || window.webkitURL;
 
     //private methods
     var createPeerConnection = function () {
