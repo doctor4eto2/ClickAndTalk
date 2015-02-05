@@ -2,7 +2,7 @@
     var clickAndTalkModule = angular.module('clickAndTalk', []);
     clickAndTalkModule.controller('enterYourNameController', ['$scope', function ($scope) {
         $scope.enterYourName = function (message) {
-            if ($scope.name == '') {
+            if (!$scope.name) {
                 alert(message);
             }
             else {

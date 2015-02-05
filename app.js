@@ -35,8 +35,9 @@ var server = http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 
+var repositories = require('./repositories');
+repositories.init();
+
 var chatServerManagerModule = require('./chatServerManager');
 chatServerManagerModule.init(server);
 
-var dataRepository = require('./repositories').dataRepository;
-dataRepository.init();
