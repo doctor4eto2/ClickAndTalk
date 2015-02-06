@@ -1,10 +1,8 @@
 ﻿(function (chatServerManager) {
     // module references
-    var socketIOModule = require('socket.io');
-    var shortIdModule = require('shortid');
+    var _socketIOModule = require('socket.io');
+    var _shortIdModule = require('shortid');
     var _repositories = require ('.././repositories');
-    var _threadRepository = _repositories.threadRepository;
-    var _threadRatingRepository = _repositories.threadRatingRepository;
     
     // private fields
     var _colors = ['green', 'red', 'black','brown', 'purple'];
@@ -36,7 +34,7 @@
     
     // public methods
     chatServerManager.init = function (server) {
-        var io = socketIOModule.listen(server);
+        var io = _socketIOModule.listen(server);
         
         io.sockets.on('connection', function (socket) {
             socket.on('chat', function (data) {
@@ -48,7 +46,7 @@
                     _userColors[data.sessionId][data.userName] = _colors[Math.floor((Math.random() * 100) + 1) % _colors.length];
                 }
                 
-                var messageId = shortIdModule.generate();
+                var messageId = _shortIdModule.generate();
 
                 var dataToSend = 
                 {
@@ -60,7 +58,7 @@
                     sessionId : data.sessionId
                 };
                 
-                _threadRepository.saveThread(dataToSend, function () { 
+                _repositories.threadRepository.saveThread(dataToSend, function () { 
                     socket.broadcast.to(data.sessionId).emit('chat', dataToSend);
                     socket.client.sockets[0].emit('chat', dataToSend);//push back to the sender
                 });
@@ -71,8 +69,8 @@
             });
             
             socket.on('vote for message', function (data) {
-                _threadRatingRepository.voteForMessage(data, function () { 
-                    var topVotesQuery = _threadRatingRepository.getThreadRating(data.sessionId);
+                _repositories.threadRatingRepository.voteForMessage(data, function () { 
+                    var topVotesQuery = _repositories.threadRatingRepository.getThreadRating(data.sessionId);
                     topVotesQuery.exec(function (error, threadRating) {
                         var sortedVotes = sortVotes(threadRating);
                         
@@ -83,8 +81,8 @@
             });
             
             socket.on('unvote for message', function (data) {
-                _threadRatingRepository.unvoteForMessage(data, function () {
-                    var topVotesQuery = _threadRatingRepository.getThreadRating(data.sessionId);
+                _repositories.threadRatingRepository.unvoteForMessage(data, function () {
+                    var topVotesQuery = _repositories.threadRatingRepository.getThreadRating(data.sessionId);
                     topVotesQuery.exec(function (error, threadRating) {
                         var sortedVotes = sortVotes(threadRating);
                         
@@ -108,7 +106,7 @@
                     numberOfUsers = _usersPerSession[sessionId];
                 }
                 
-                var callHistoryQuery = _threadRepository.getChatHistory(sessionId);
+                var callHistoryQuery = _repositories.threadRepository.getChatHistory(sessionId);
                 callHistoryQuery.exec(function (error, thread) {
                     var chatHistory = [];
                     
@@ -125,7 +123,7 @@
                         }
                     }
                     
-                    var topVotesQuery = _threadRatingRepository.getThreadRating(sessionId);
+                    var topVotesQuery = _repositories.threadRatingRepository.getThreadRating(sessionId);
                     topVotesQuery.exec(function (error, threadRating) {
                         var sortedVotes = sortVotes(threadRating);
 

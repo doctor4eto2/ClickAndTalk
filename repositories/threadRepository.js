@@ -1,7 +1,7 @@
 ﻿(function (threadRepository, connection) {
-    var mongoose = require('mongoose');
 
     //private fields
+    var _mongoose = require('mongoose');
     var Thread;
     var _threadSchema = {
         sessionId : { type : String, index: true },
@@ -31,7 +31,7 @@
         });
     };
     threadRepository.init = function () {
-        Thread = mongoose.model('Thread', mongoose.Schema(_threadSchema));
+        Thread = _mongoose.model('Thread', _mongoose.Schema(_threadSchema));
     };
     threadRepository.saveThread = function (data, next) {
         Thread.findOne({ sessionId : data.sessionId }, function (error, thread) {

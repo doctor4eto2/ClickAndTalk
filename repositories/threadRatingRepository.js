@@ -1,8 +1,6 @@
 ﻿(function (threadRatingRepository) {
-    
-    var mongoose = require('mongoose');
-
     //private fields
+    var _mongoose = require('mongoose');
     var ThreadRating;
     var _threadRatingSchema = {
         sessionId : { type : String, index: true },
@@ -30,7 +28,7 @@
         });
     };
     threadRatingRepository.init = function () {
-        ThreadRating = mongoose.model('ThreadRating',  mongoose.Schema(_threadRatingSchema));
+        ThreadRating = _mongoose.model('ThreadRating', _mongoose.Schema(_threadRatingSchema));
     };
     threadRatingRepository.voteForMessage = function (data, next) {
         ThreadRating.findOne({ sessionId : data.sessionId }, function (error, threadRating) {
