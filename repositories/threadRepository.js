@@ -1,4 +1,4 @@
-﻿(function (threadRepository, connection) {
+﻿(function (threadRepository) {
 
     //private fields
     var _mongoose = require('mongoose');
